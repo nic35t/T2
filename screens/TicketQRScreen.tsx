@@ -24,8 +24,9 @@ export const TicketQRScreen: React.FC<TicketQRScreenProps> = ({ ticket, onNaviga
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
     
-    const rotateX = ((y - centerY) / centerY) * -10; // Max 10 deg rotation
-    const rotateY = ((x - centerX) / centerX) * 10;
+    // Calculate rotation (max 15 degrees)
+    const rotateX = ((y - centerY) / centerY) * -15; 
+    const rotateY = ((x - centerX) / centerX) * 15;
     
     setRotation({ x: rotateX, y: rotateY });
     setGlare({ x: (x / rect.width) * 100, y: (y / rect.height) * 100 });
@@ -82,6 +83,14 @@ export const TicketQRScreen: React.FC<TicketQRScreenProps> = ({ ticket, onNaviga
                      backgroundSize: '200% 200%'
                   }}
                ></div>
+               
+               {/* Reflective Shine */}
+                <div 
+                  className="absolute inset-0 z-30 pointer-events-none opacity-20"
+                  style={{
+                     background: `radial-gradient(circle at ${glare.x}% ${glare.y}%, rgba(255,255,255,0.8), transparent 60%)`
+                  }}
+                ></div>
 
                {/* Top Section */}
                <div className="p-8 pb-6 bg-[#1E1E24] flex flex-col items-center border-b-2 border-dashed border-gray-700 relative text-white">
@@ -95,25 +104,26 @@ export const TicketQRScreen: React.FC<TicketQRScreenProps> = ({ ticket, onNaviga
                   <div className="size-56 bg-white p-2 rounded-xl mb-4 relative overflow-hidden">
                      <div className="w-full h-full bg-[url('https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=LTICKET_SECURE')] bg-contain bg-no-repeat bg-center rendering-pixelated"></div>
                      {/* Scanner Line */}
-                     <div className="absolute top-0 left-0 w-full h-1 bg-red-500/50 shadow-[0_0_15px_rgba(255,0,0,0.8)] animate-[scan_2s_ease-in-out_infinite]"></div>
+                     <div className="absolute top-0 left-0 w-full h-1 bg-lotte-red/50 shadow-[0_0_15px_rgba(255,0,0,0.8)] animate-[scan_2s_ease-in-out_infinite]"></div>
                   </div>
                   
                   <p className="text-[10px] text-primary/80 font-mono tracking-[0.3em] mt-1 uppercase">Secure Digital Asset</p>
                </div>
 
                {/* Bottom Info */}
-               <div className="bg-[#D4AF37] p-6 flex justify-between items-center text-black">
-                  <div className="text-center flex-1">
+               <div className="bg-primary p-6 flex justify-between items-center text-black relative overflow-hidden">
+                  <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.2)_50%,transparent_75%)] bg-[length:10px_10px]"></div>
+                  <div className="text-center flex-1 z-10">
                      <p className="text-[10px] uppercase font-bold tracking-wider opacity-60">GATE</p>
                      <p className="text-xl font-bold font-display">3</p>
                   </div>
-                  <div className="text-center flex-1 border-x border-black/10">
+                  <div className="text-center flex-1 border-x border-black/10 z-10">
                      <p className="text-[10px] uppercase font-bold tracking-wider opacity-60">ROW</p>
                      <p className="text-xl font-bold font-display">
                         {ticket?.seats?.includes('Row') ? ticket.seats.split('Row ')[1]?.charAt(0) : '-'}
                      </p>
                   </div>
-                  <div className="text-center flex-1">
+                  <div className="text-center flex-1 z-10">
                      <p className="text-[10px] uppercase font-bold tracking-wider opacity-60">SEAT</p>
                      <p className="text-xl font-bold font-display">
                         {ticket?.seats?.includes('Seat') ? ticket.seats.split('Seat ')[1] : 'Any'}

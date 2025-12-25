@@ -11,7 +11,7 @@ interface BookingScreenProps {
 
 export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate, onBack }) => {
   const [selectedSeat, setSelectedSeat] = useState<string | null>(null);
-  const { addTicket } = useAppContext();
+  const { addTicket, addPoints } = useAppContext();
   const [isProcessing, setIsProcessing] = useState(false);
 
   const formatKRW = (amount: number) => {
@@ -83,6 +83,7 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
       };
 
       addTicket(newTicket);
+      addPoints(pointsEarned);
       setIsProcessing(false);
       
       // Navigate to Success Screen instead of Tickets
@@ -118,8 +119,8 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
         <div className="max-w-4xl mx-auto w-full">
           {/* Stage */}
           <div className="sticky top-0 z-10 w-full pt-12 pb-16 bg-gradient-to-b from-[#0F0F12] via-[#0F0F12] to-transparent flex flex-col items-center pointer-events-none">
-            <div className="w-[80%] md:w-[60%] h-12 border-t-4 border-primary/50 rounded-t-[100%] shadow-[0_-15px_40px_rgba(212,175,55,0.2)] mb-4 relative">
-               <div className="absolute -top-4 left-1/2 -translate-x-1/2 text-[10px] md:text-xs font-bold text-primary uppercase tracking-[0.4em]">STAGE</div>
+            <div className="w-[80%] md:w-[60%] h-12 border-t-4 border-lotte-red/50 rounded-t-[100%] shadow-[0_-15px_40px_rgba(218,41,28,0.2)] mb-4 relative">
+               <div className="absolute -top-4 left-1/2 -translate-x-1/2 text-[10px] md:text-xs font-bold text-lotte-red uppercase tracking-[0.4em]">STAGE</div>
             </div>
           </div>
 
@@ -172,14 +173,14 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
       {/* Benefits Bar (Visual Aid for savings) */}
       {selectedSeat && (
         <div className="absolute bottom-[calc(9.5rem+env(safe-area-inset-bottom))] w-full px-6 z-30 animate-fade-in-up">
-           <div className="max-w-4xl mx-auto bg-gradient-to-r from-primary/20 to-transparent border-l-4 border-primary p-3 rounded-r-xl backdrop-blur-md">
+           <div className="max-w-4xl mx-auto bg-gradient-to-r from-surface-card to-surface-card/80 border-l-4 border-lotte-red p-3 rounded-r-xl backdrop-blur-md shadow-lg">
               <div className="flex justify-between items-center">
-                 <span className="text-primary font-bold text-xs uppercase tracking-widest flex items-center gap-1">
+                 <span className="text-lotte-red font-bold text-xs uppercase tracking-widest flex items-center gap-1">
                     <span className="material-symbols-outlined text-sm">loyalty</span>
                     Dual Benefit Applied
                  </span>
                  <span className="text-white font-bold text-sm">
-                    Total Benefit: {formatKRW((originalPrice - finalPrice) + points)}
+                    Total Value: {formatKRW((originalPrice - finalPrice) + points)}
                  </span>
               </div>
            </div>
@@ -202,14 +203,14 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
             <div className="text-right md:mt-2">
                 {selectedSeat ? (
                    <div className="flex flex-col items-end">
-                      <p className="text-xs text-gray-500 line-through decoration-red-500">{formatKRW(originalPrice)}</p>
+                      <p className="text-xs text-gray-500 line-through decoration-white/30">{formatKRW(originalPrice)}</p>
                       <div className="flex items-baseline gap-2">
-                         <span className="text-xs font-bold text-red-500 bg-red-500/10 px-1 rounded">20% OFF</span>
+                         <span className="text-xs font-bold text-white bg-lotte-red px-1 rounded">20% OFF</span>
                          <p className="text-3xl lg:text-4xl font-medium font-mono tracking-tighter text-white">{formatKRW(finalPrice)}</p>
                       </div>
-                      <p className="text-[10px] text-primary mt-1 flex items-center gap-1">
-                         <span className="material-symbols-outlined text-[10px]">add_circle</span>
-                         Earn {formatKRW(points)} Points (10%)
+                      <p className="text-[11px] text-primary font-bold mt-1 flex items-center gap-1 bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
+                         <span className="material-symbols-outlined text-[12px]">monetization_on</span>
+                         Earn {formatKRW(points)} L-Point (10%)
                       </p>
                    </div>
                 ) : (
@@ -223,12 +224,12 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
             className={`
               w-full md:max-w-xs h-16 rounded-2xl font-bold text-sm uppercase tracking-[0.2em] shadow-lg transition-all flex items-center justify-center gap-2
               ${selectedSeat && !isProcessing
-                ? 'bg-gradient-to-r from-white to-gray-200 text-black border-none hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]' 
+                ? 'bg-lotte-red text-white hover:bg-red-700 hover:shadow-[0_0_20px_rgba(218,41,28,0.4)]' 
                 : 'bg-white/5 text-white/30 cursor-not-allowed border border-white/5'}
             `}
           >
             {isProcessing ? (
-              <span className="size-5 border-2 border-black/30 border-t-black rounded-full animate-spin"></span>
+              <span className="size-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
             ) : (
               'Confirm Booking'
             )}

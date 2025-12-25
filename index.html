@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="theme-color" content="#0F0F12" />
     <meta name="description" content="L.TICKET - Premium Cinematic Ticketing Experience" />
     <title>L.TICKET</title>
     <!-- Fonts -->
@@ -27,14 +27,14 @@
         theme: {
           extend: {
             colors: {
-              primary: '#D4AF37', // Metallic Gold
+              primary: '#D4AF37', // Luxury Gold (Value/Status)
+              'lotte-red': '#DA291C', // Lotte Red (Action/CTA)
               'primary-light': '#F3E5AB',
               'primary-dim': '#8C7323',
-              background: '#0a0a0a',
-              'background-dark': '#121212',
-              'surface-card': '#1C1C1E',
+              background: '#0F0F12', // Rich Black
+              'background-dark': '#050505',
+              'surface-card': '#1E1E24', // Dark Gunmetal
               'surface-lighter': '#2C2C2E',
-              'surface-dark': '#1e1e1e',
             },
             fontFamily: {
               display: ['"DM Sans"', 'sans-serif'],
@@ -78,7 +78,7 @@
     </script>
     <style>
       body {
-        background-color: #0a0a0a;
+        background-color: #0F0F12;
         color: white;
         -webkit-font-smoothing: antialiased;
         overscroll-behavior-y: none;
@@ -90,6 +90,18 @@
       .no-scrollbar {
         -ms-overflow-style: none;
         scrollbar-width: none;
+      }
+      .perspective-1000 {
+        perspective: 1000px;
+      }
+      .backface-hidden {
+        backface-visibility: hidden;
+      }
+      .rotate-y-180 {
+        transform: rotateY(180deg);
+      }
+      .preserve-3d {
+        transform-style: preserve-3d;
       }
     </style>
   <script type="importmap">

@@ -26,8 +26,10 @@ interface AppContextType {
   markAsRead: (id: string) => void;
   unreadCount: number;
   // Wallet Logic
-  userBalance: number;
-  updateBalance: (amount: number) => void;
+  userBalance: number; // Cash Balance
+  userPoints: number; // L-Point
+  chargeBalance: (amount: number) => void;
+  addPoints: (amount: number) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -37,6 +39,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [likedEvents, setLikedEvents] = useState<Set<string>>(new Set());
   const [userBalance, setUserBalance] = useState(0);
+  const [userPoints, setUserPoints] = useState(2450); // Starting points
   
   // Mock Notifications
   const [notifications, setNotifications] = useState<NotificationItem[]>([
@@ -52,7 +55,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       id: `n-${Date.now()}`,
       title: 'Booking Confirmed',
       message: ticket.category === 'voucher' 
-        ? `Voucher charged: ${new Intl.NumberFormat('ko-KR').format(ticket.balance || 0)}P`
+        ? `Voucher charged: ${new Intl.NumberFormat('ko-KR').format(ticket.balance || 0)} KRW`
         : `Your ticket for ${ticket.title} has been successfully issued.`,
       time: 'Just now',
       read: false,
@@ -61,8 +64,12 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setNotifications(prev => [newNotif, ...prev]);
   };
 
-  const updateBalance = (amount: number) => {
+  const chargeBalance = (amount: number) => {
     setUserBalance(prev => prev + amount);
+  };
+
+  const addPoints = (amount: number) => {
+    setUserPoints(prev => prev + amount);
   };
 
   const login = () => setIsLoggedIn(true);
@@ -102,7 +109,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       markAsRead,
       unreadCount,
       userBalance,
-      updateBalance
+      userPoints,
+      chargeBalance,
+      addPoints
     }}>
       {children}
     </AppContext.Provider>

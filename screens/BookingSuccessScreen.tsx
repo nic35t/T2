@@ -17,7 +17,7 @@ export const BookingSuccessScreen: React.FC<BookingSuccessScreenProps> = ({ onNa
   const isVoucher = data?.isVoucher || false;
 
   useEffect(() => {
-    // Auto redirect after 5 seconds if no interaction
+    // Auto redirect after 6 seconds if no interaction
     const timer = setTimeout(() => {
       onNavigate(AppScreen.TICKETS);
     }, 6000);
@@ -31,17 +31,17 @@ export const BookingSuccessScreen: React.FC<BookingSuccessScreenProps> = ({ onNa
   return (
     <div className="relative h-screen w-full bg-[#0F0F12] flex flex-col items-center justify-center overflow-hidden text-white">
       {/* Background Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150vw] h-[150vw] bg-primary/10 rounded-full blur-[100px] animate-pulse-slow"></div>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150vw] h-[150vw] bg-lotte-red/10 rounded-full blur-[100px] animate-pulse-slow"></div>
 
       {/* Confetti (Simple CSS Animation) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-         {[...Array(20)].map((_, i) => (
+         {[...Array(25)].map((_, i) => (
             <div 
                key={i} 
-               className="absolute w-2 h-4 bg-primary/80"
+               className={`absolute w-1.5 h-3 ${i % 2 === 0 ? 'bg-primary' : 'bg-lotte-red'}`}
                style={{
                   left: `${Math.random() * 100}%`,
-                  top: `-10px`,
+                  top: `-20px`,
                   animation: `fall ${2 + Math.random() * 3}s linear infinite`,
                   animationDelay: `${Math.random() * 2}s`,
                   transform: `rotate(${Math.random() * 360}deg)`
@@ -53,63 +53,63 @@ export const BookingSuccessScreen: React.FC<BookingSuccessScreenProps> = ({ onNa
       <div className="relative z-10 w-full max-w-md px-8 text-center animate-fade-in-up">
         {/* Success Icon */}
         <div className="mb-8 relative inline-block">
-          <div className="size-24 rounded-full bg-gradient-to-tr from-primary to-[#F3E5AB] flex items-center justify-center shadow-[0_0_30px_rgba(212,175,55,0.6)]">
-            <span className="material-symbols-outlined text-5xl text-black">check</span>
+          <div className="size-24 rounded-full bg-gradient-to-tr from-lotte-red to-[#FF6B6B] flex items-center justify-center shadow-[0_0_40px_rgba(218,41,28,0.5)]">
+            <span className="material-symbols-outlined text-5xl text-white">check_circle</span>
           </div>
-          <div className="absolute inset-0 rounded-full border border-white/50 animate-ping opacity-50"></div>
+          <div className="absolute inset-0 rounded-full border border-white/20 animate-ping opacity-50"></div>
         </div>
 
         <h1 className="text-3xl font-serif font-bold mb-2 text-white">
           {isVoucher ? 'Charge Complete' : 'Booking Confirmed'}
         </h1>
         <p className="text-gray-400 mb-8 font-light">
-          {isVoucher ? 'Your points are ready to use.' : 'Your seat has been successfully reserved.'}
+          {isVoucher ? 'Your points are ready to use.' : 'See you at the venue.'}
         </p>
 
         {/* Benefit Card */}
-        <div className="bg-[#1E1E24] rounded-2xl p-6 border border-white/10 shadow-2xl mb-8 transform hover:scale-105 transition-transform duration-300">
+        <div className="bg-surface-card rounded-2xl p-6 border border-white/10 shadow-2xl mb-8 transform hover:scale-105 transition-transform duration-300 relative overflow-hidden">
+           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-lotte-red"></div>
+           
            <p className="text-xs text-gray-500 uppercase tracking-widest font-bold mb-4">{data?.title || 'Purchase Summary'}</p>
            
            <div className="flex justify-between items-end border-b border-white/10 pb-4 mb-4">
-              <span className="text-gray-400 text-sm">Payment</span>
+              <span className="text-gray-400 text-sm">Total Paid</span>
               <span className="text-2xl font-bold font-mono text-white">{formatKRW(data?.totalPaid || 0)}</span>
            </div>
 
-           <div className="space-y-2">
-              <div className="flex justify-between items-center text-sm">
-                 <div className="flex items-center gap-1.5 text-blue-400">
-                    <span className="material-symbols-outlined text-base">savings</span>
-                    <span>Discount Applied</span>
-                 </div>
-                 <span className="font-bold text-blue-400">-{formatKRW(data?.totalSaved || 0)}</span>
-              </div>
+           <div className="space-y-3">
+              {!isVoucher && (
+                <div className="flex justify-between items-center text-sm">
+                   <div className="flex items-center gap-1.5 text-blue-400">
+                      <span className="material-symbols-outlined text-base">savings</span>
+                      <span>You Saved (20%)</span>
+                   </div>
+                   <span className="font-bold text-blue-400">-{formatKRW(data?.totalSaved || 0)}</span>
+                </div>
+              )}
               <div className="flex justify-between items-center text-sm">
                  <div className="flex items-center gap-1.5 text-primary">
-                    <span className="material-symbols-outlined text-base">loyalty</span>
-                    <span>Points Earned</span>
+                    <span className="material-symbols-outlined text-base">monetization_on</span>
+                    <span>{isVoucher ? 'Bonus Points (5%)' : 'L-Point Earned (10%)'}</span>
                  </div>
                  <span className="font-bold text-primary">+{data?.pointsEarned?.toLocaleString()} P</span>
               </div>
-           </div>
-           
-           <div className="mt-4 pt-4 bg-primary/10 -mx-6 -mb-6 p-4 rounded-b-2xl flex justify-between items-center">
-              <span className="text-primary font-bold text-sm uppercase tracking-wide">Total Benefit Value</span>
-              <span className="text-primary font-bold text-lg">{formatKRW((data?.totalSaved || 0) + (data?.pointsEarned || 0))}</span>
            </div>
         </div>
 
         <div className="flex flex-col gap-3">
           <button 
             onClick={() => onNavigate(AppScreen.TICKETS)}
-            className="w-full h-14 bg-white text-black font-bold rounded-xl shadow-lg hover:bg-gray-100 transition-colors uppercase tracking-widest text-sm"
+            className="w-full h-14 bg-lotte-red text-white font-bold rounded-xl shadow-lg hover:bg-red-700 transition-colors uppercase tracking-widest text-sm flex items-center justify-center gap-2"
           >
-            View My Wallet
+            <span>View Ticket Asset</span>
+            <span className="material-symbols-outlined text-lg">arrow_forward</span>
           </button>
           <button 
             onClick={() => onNavigate(AppScreen.HOME)}
             className="w-full h-14 bg-transparent text-gray-500 font-bold rounded-xl hover:text-white transition-colors text-sm"
           >
-            Go Home
+            Return Home
           </button>
         </div>
       </div>
