@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
-import { AppScreen, NoticeData } from '../types';
+import { NoticeData } from '../types';
+import { useAppContext } from '../context/AppContext';
 
 interface CustomerCenterScreenProps {
   initialTab?: 'NOTICE' | 'FAQ' | 'INQUIRY';
@@ -24,6 +25,8 @@ export const CustomerCenterScreen: React.FC<CustomerCenterScreenProps> = ({ init
   const [inquirySubject, setInquirySubject] = useState('');
   const [inquiryContent, setInquiryContent] = useState('');
   const [expandedFaq, setExpandedFaq] = useState<string | null>(null);
+  
+  const { inquiries, addInquiry } = useAppContext();
 
   const renderTabButton = (tab: typeof activeTab, label: string) => {
     const isActive = activeTab === tab;
@@ -40,9 +43,10 @@ export const CustomerCenterScreen: React.FC<CustomerCenterScreenProps> = ({ init
 
   const handleSubmitInquiry = (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Your inquiry has been submitted successfully.');
+    addInquiry(inquirySubject, inquiryContent);
     setInquirySubject('');
     setInquiryContent('');
+    // No alert - pure UI feedback happens via the list update below
   };
 
   return (
@@ -100,7 +104,7 @@ export const CustomerCenterScreen: React.FC<CustomerCenterScreenProps> = ({ init
         )}
 
         {activeTab === 'INQUIRY' && (
-          <div className="animate-fade-in-up">
+          <div className="animate-fade-in-up pb-10">
             <div className="bg-surface-card/50 p-4 rounded-xl border border-white/5 mb-6">
                <p className="text-xs text-gray-400 leading-relaxed">
                   We will respond to your inquiry within 24 hours. <br/>
@@ -108,7 +112,8 @@ export const CustomerCenterScreen: React.FC<CustomerCenterScreenProps> = ({ init
                </p>
             </div>
             
-            <form onSubmit={handleSubmitInquiry} className="space-y-4">
+            <form onSubmit={handleSubmitInquiry} className="space-y-4 mb-10 border-b border-white/10 pb-10">
+               <h3 className="text-sm font-serif font-bold text-white">New Inquiry</h3>
                <div>
                   <label className="text-xs font-bold text-gray-500 uppercase mb-1.5 block">Subject</label>
                   <input 
@@ -137,6 +142,29 @@ export const CustomerCenterScreen: React.FC<CustomerCenterScreenProps> = ({ init
                   Submit Inquiry
                </button>
             </form>
+
+            {/* Inquiry History */}
+            <h3 className="text-sm font-serif font-bold text-white mb-4">My Inquiries ({inquiries.length})</h3>
+            <div className="space-y-3">
+              {inquiries.length === 0 ? (
+                <p className="text-xs text-gray-500 text-center py-8">No inquiry history.</p>
+              ) : (
+                inquiries.map((inq) => (
+                  <div key={inq.id} className="bg-surface-card border border-white/5 rounded-xl p-4">
+                    <div className="flex justify-between items-start mb-2">
+                       <div>
+                         <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase mr-2 ${inq.status === 'PENDING' ? 'bg-gray-700 text-gray-300' : 'bg-primary/20 text-primary'}`}>
+                            {inq.status}
+                         </span>
+                         <span className="text-[10px] text-gray-500 font-mono">{inq.date}</span>
+                       </div>
+                    </div>
+                    <p className="text-sm font-bold text-white mb-1">{inq.subject}</p>
+                    <p className="text-xs text-gray-400 line-clamp-2">{inq.content}</p>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         )}
       </main>

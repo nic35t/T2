@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppScreen, EventData, NavigationHandler, TicketData } from '../types';
 import { useAppContext } from '../context/AppContext';
 
@@ -16,7 +16,10 @@ export const VoucherPurchaseScreen: React.FC<VoucherPurchaseScreenProps> = ({ ev
   const [showGiftModal, setShowGiftModal] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   
-  const { addTicket, chargeBalance } = useAppContext();
+  // Toast State
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const { addTicket, chargeBalance, addNotification } = useAppContext();
 
   const denominations = [
      { val: 10000, bonus: 500 },
@@ -28,6 +31,13 @@ export const VoucherPurchaseScreen: React.FC<VoucherPurchaseScreenProps> = ({ ev
   const currentOption = denominations.find(d => d.val === amount) || denominations[3];
   const totalPoints = currentOption.val + currentOption.bonus;
   const bonusRate = (currentOption.bonus / currentOption.val) * 100;
+
+  useEffect(() => {
+    if (toastMessage) {
+      const timer = setTimeout(() => setToastMessage(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toastMessage]);
 
   const formatKRW = (val: number) => {
     return new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(val);
@@ -44,13 +54,7 @@ export const VoucherPurchaseScreen: React.FC<VoucherPurchaseScreenProps> = ({ ev
   const handleGiftSubmit = (e: React.FormEvent) => {
      e.preventDefault();
      setShowGiftModal(false);
-     // Simulate SMS Toast
-     const toast = document.createElement('div');
-     toast.innerText = '🎁 Gift link sent via SMS!';
-     toast.className = 'fixed top-10 left-1/2 -translate-x-1/2 bg-white text-black px-6 py-3 rounded-full font-bold shadow-2xl z-[100] animate-fade-in-up';
-     document.body.appendChild(toast);
-     setTimeout(() => toast.remove(), 3000);
-     
+     setToastMessage('🎁 Recipient verified! Link will be sent via SMS.');
      setShowConfirm(true);
   };
 
@@ -58,30 +62,42 @@ export const VoucherPurchaseScreen: React.FC<VoucherPurchaseScreenProps> = ({ ev
     setIsProcessing(true);
     
     setTimeout(() => {
-      // Create new Voucher Ticket
-      const newVoucher: TicketData = {
-        id: `v-${Date.now()}`,
-        eventId: event.id,
-        category: 'voucher',
-        title: event.title,
-        location: 'All Branches',
-        fullDate: `Valid until 2029.12.31`,
-        balance: totalPoints,
-        image: event.image,
-        status: 'active',
-        type: 'Digital Voucher'
-      };
-
+      // Logic for Voucher Purchase
+      
       if (!isGift) {
+         // Case 1: Buying for Self
+         const newVoucher: TicketData = {
+           id: `v-${Date.now()}`,
+           eventId: event.id,
+           category: 'voucher',
+           title: event.title,
+           location: 'All Branches',
+           fullDate: `Valid until 2029.12.31`,
+           balance: totalPoints,
+           image: event.image,
+           status: 'active',
+           type: 'Digital Voucher'
+         };
+         
          addTicket(newVoucher);
          chargeBalance(totalPoints);
+      } else {
+         // Case 2: Gifting (Logic Change: Do NOT add to wallet, just simulate send)
+         addNotification({
+            id: `gift-${Date.now()}`,
+            title: 'Gift Sent',
+            message: `You sent a ${formatKRW(totalPoints)} voucher to your friend.`,
+            time: 'Just now',
+            read: false,
+            type: 'success'
+         });
       }
 
       setIsProcessing(false);
       setShowConfirm(false);
       
       onNavigate(AppScreen.BOOKING_SUCCESS, {
-        title: 'Voucher Purchase',
+        title: isGift ? 'Voucher Gift Sent' : 'Voucher Purchase',
         totalPaid: amount,
         totalSaved: 0,
         pointsEarned: currentOption.bonus,
@@ -92,6 +108,14 @@ export const VoucherPurchaseScreen: React.FC<VoucherPurchaseScreenProps> = ({ ev
 
   return (
     <div className="relative h-screen bg-[#0F0F12] text-white flex flex-col animate-fade-in font-sans">
+      
+      {/* React Toast */}
+      {toastMessage && (
+        <div className="fixed top-10 left-1/2 -translate-x-1/2 bg-white text-black px-6 py-3 rounded-full font-bold shadow-2xl z-[100] animate-fade-in-up">
+           {toastMessage}
+        </div>
+      )}
+
       <header className="flex items-center justify-between px-4 h-16 border-b border-white/5 bg-[#0F0F12] z-20">
         <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
           <button onClick={onBack} className="text-white hover:text-primary transition-colors">

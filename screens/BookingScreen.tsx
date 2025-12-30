@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppScreen, EventData, NavigationHandler, TicketData, SeatGrade } from '../types';
 import { useAppContext } from '../context/AppContext';
 
@@ -11,8 +11,16 @@ interface BookingScreenProps {
 
 export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate, onBack }) => {
   const [selectedSeat, setSelectedSeat] = useState<string | null>(null);
-  const { addTicket, addPoints } = useAppContext();
+  const { addTicket, addPoints, bookedSeats, bookSeat } = useAppContext();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [takenSeats, setTakenSeats] = useState<Set<string>>(new Set());
+
+  // Load taken seats from context for this specific event
+  useEffect(() => {
+    if (bookedSeats[event.id]) {
+      setTakenSeats(new Set(bookedSeats[event.id]));
+    }
+  }, [bookedSeats, event.id]);
 
   const formatKRW = (amount: number) => {
     return new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(amount);
@@ -33,6 +41,7 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
   };
 
   const handleSeatClick = (seatId: string) => {
+    if (takenSeats.has(seatId)) return;
     setSelectedSeat(prev => prev === seatId ? null : seatId);
   };
 
@@ -55,6 +64,12 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
   const handleConfirmBooking = () => {
     if (!selectedSeat) return;
 
+    // Double check availability logic (Simulating backend check)
+    if (takenSeats.has(selectedSeat)) {
+        alert("This seat has just been booked by another user.");
+        return;
+    }
+
     setIsProcessing(true);
 
     const finalPrice = getFinalPrice();
@@ -67,6 +82,16 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
 
     // Simulate API Call
     setTimeout(() => {
+      // 1. Lock the seat in the "Backend" (Context)
+      const success = bookSeat(event.id, selectedSeat);
+      
+      if (!success) {
+          setIsProcessing(false);
+          alert("Booking failed. Please try again.");
+          return;
+      }
+
+      // 2. Create the ticket
       const newTicket: TicketData = {
         id: `t-${Date.now()}`,
         eventId: event.id,
@@ -134,7 +159,7 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
                       <div className="absolute -left-8 text-xs font-bold text-gray-600 font-mono w-4 text-center">{row}</div>
                       {cols.map((col) => {
                         const seatId = `${row}${col}`;
-                        const isTaken = (row === 'B' && col === 4) || (row === 'C' && col === 5) || (row === 'D' && col === 2);
+                        const isTaken = takenSeats.has(seatId);
                         const isSelected = selectedSeat === seatId;
                         
                         return (
@@ -145,7 +170,7 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
                             className={`
                               relative size-9 md:size-11 lg:size-14 rounded-full flex items-center justify-center text-[10px] md:text-xs lg:text-sm font-bold transition-all duration-300 ease-out font-mono group
                               ${isTaken 
-                                ? 'bg-white/5 text-transparent cursor-not-allowed border border-white/5' 
+                                ? 'bg-white/5 text-transparent cursor-not-allowed border border-white/5 relative opacity-30' 
                                 : isSelected 
                                   ? `${seatInfo.color} text-black shadow-[0_0_25px_rgba(255,255,255,0.4)] scale-125 z-10 border-2 border-white ring-4 ring-primary/20` 
                                   : `bg-transparent border ${seatInfo.borderColor} text-gray-400 hover:bg-white/10 hover:text-white hover:scale-110 opacity-70 hover:opacity-100`
@@ -155,8 +180,13 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
                             {isSelected && (
                                <span className="absolute inset-0 rounded-full bg-white/40 animate-pulse"></span>
                             )}
+                            {isTaken && (
+                                <span className="absolute inset-0 flex items-center justify-center">
+                                    <span className="material-symbols-outlined text-sm text-gray-500">close</span>
+                                </span>
+                            )}
                             <span className="relative z-10">
-                              {isTaken ? 'X' : isSelected ? '✓' : ''}
+                              {isTaken ? '' : isSelected ? '✓' : ''}
                             </span>
                           </button>
                         );

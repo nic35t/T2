@@ -53,7 +53,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
     <div className="mb-10 pl-6">
       <h3 className="text-xl font-serif font-bold text-white mb-4 pr-6 flex justify-between items-end">
         {title}
-        <span className="text-xs font-sans font-bold text-primary uppercase tracking-widest cursor-pointer">View All</span>
+        <span 
+          onClick={() => onNavigate?.(AppScreen.SEARCH)}
+          className="text-xs font-sans font-bold text-primary uppercase tracking-widest cursor-pointer"
+        >
+          View All
+        </span>
       </h3>
       <div className="flex gap-4 overflow-x-auto no-scrollbar pr-6 pb-4">
         {events.map((evt) => (

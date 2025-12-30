@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppScreen, EventData, NavigationHandler } from './types';
 import { EVENTS } from './constants';
 import { SplashScreen } from './screens/SplashScreen';
@@ -24,9 +24,38 @@ const AppContent: React.FC = () => {
   const [currentScreen, setCurrentScreen] = useState<AppScreen>(AppScreen.SPLASH);
   const [selectedData, setSelectedData] = useState<any>(null);
 
+  // Initialize History API handling
+  useEffect(() => {
+    // Initial push for the splash screen
+    window.history.replaceState({ screen: AppScreen.SPLASH, data: null }, '');
+
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state && event.state.screen) {
+        setCurrentScreen(event.state.screen);
+        setSelectedData(event.state.data);
+      } else {
+        // Fallback for initial state or empty history
+        setCurrentScreen(AppScreen.HOME);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   const handleNavigate: NavigationHandler = (screen, data) => {
+    // Update local state
     if (data) setSelectedData(data);
     setCurrentScreen(screen);
+
+    // Push new state to history but DO NOT change the URL.
+    // This avoids SecurityError in sandboxed/cross-origin environments.
+    // The state object itself is sufficient for handling back/forward navigation.
+    window.history.pushState({ screen, data }, '');
+  };
+
+  const handleBack = () => {
+    window.history.back();
   };
 
   const renderScreen = () => {
@@ -44,19 +73,19 @@ const AppContent: React.FC = () => {
       case AppScreen.MY: // Renamed from PROFILE
         return <MyScreen onNavigate={handleNavigate} />;
       case AppScreen.CUSTOMER_CENTER: 
-        return <CustomerCenterScreen initialTab={selectedData?.initialTab} onBack={() => handleNavigate(AppScreen.MY)} />;
+        return <CustomerCenterScreen initialTab={selectedData?.initialTab} onBack={handleBack} />;
       case AppScreen.EVENT_DETAILS:
         if (selectedData?.category === 'voucher') {
           return <VoucherDetailsScreen 
                    event={selectedData || EVENTS[0]} 
                    onNavigate={handleNavigate} 
-                   onBack={() => handleNavigate(AppScreen.HOME)} 
+                   onBack={handleBack} 
                  />;
         }
         return <EventDetailsScreen 
                  event={selectedData || EVENTS[0]} 
                  onNavigate={handleNavigate} 
-                 onBack={() => handleNavigate(AppScreen.HOME)} 
+                 onBack={handleBack} 
                />;
       case AppScreen.BOOKING:
         if (selectedData?.category === 'voucher') {
@@ -80,15 +109,15 @@ const AppContent: React.FC = () => {
         return <TicketQRScreen 
                  ticket={selectedData} 
                  onNavigate={handleNavigate} 
-                 onBack={() => handleNavigate(AppScreen.TICKETS)} 
+                 onBack={handleBack} 
                />;
       case AppScreen.CAST_LIST:
         return <CastListScreen 
                  event={selectedData?.event || EVENTS[0]} 
-                 onBack={() => handleNavigate(AppScreen.EVENT_DETAILS, selectedData?.event)} 
+                 onBack={handleBack} 
                />;
       case AppScreen.NOTIFICATIONS:
-        return <NotificationsScreen onBack={() => handleNavigate(AppScreen.TICKETS)} />;
+        return <NotificationsScreen onBack={handleBack} />;
       case AppScreen.LOGIN:
          return <HomeScreen onNavigate={handleNavigate} />;
       default:
