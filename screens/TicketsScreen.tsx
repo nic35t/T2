@@ -44,6 +44,11 @@ export const TicketsScreen: React.FC<TicketsScreenProps> = ({ onNavigate }) => {
     }
   };
 
+  const handleResendSMS = (e: React.MouseEvent, name?: string) => {
+     e.stopPropagation();
+     alert(`SMS has been resent to ${name || 'recipient'}.`);
+  };
+
   const formatKRW = (amount: number) => {
     return new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(amount);
   };
@@ -299,56 +304,73 @@ export const TicketsScreen: React.FC<TicketsScreenProps> = ({ onNavigate }) => {
 
             {historyTickets.length > 0 ? (
               historyTickets.map((t) => {
-                // Determine visuals based on isGift
                 const isGift = t.isGift;
                 
                 return (
-                  <div key={t.id} className="bg-white dark:bg-[#151517] rounded-2xl overflow-hidden border border-gray-200 dark:border-white/5 hover:border-gray-300 dark:hover:border-white/10 transition-colors mx-auto w-full max-w-sm cursor-pointer group mb-4 shadow-sm relative">
-                     {/* Gift Stripe */}
-                     {isGift && <div className="absolute left-0 top-0 bottom-0 w-1 bg-lotte-red"></div>}
-                     
-                     <div className="flex p-4 gap-4">
-                        <div className="w-16 h-20 bg-gray-200 dark:bg-gray-800 rounded-lg bg-cover bg-center grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all" style={{ backgroundImage: `url('${t.image}')` }}></div>
-                        <div className="flex-1 flex flex-col justify-center gap-1.5">
-                           <div className="flex justify-between items-start">
-                              <h3 className="font-serif text-sm font-bold text-gray-900 dark:text-gray-300 group-hover:text-primary dark:group-hover:text-white transition-colors line-clamp-1">{t.title}</h3>
+                  <div key={t.id} className="group relative bg-white dark:bg-surface-card rounded-2xl overflow-hidden border border-gray-200 dark:border-white/5 hover:border-primary/50 transition-all shadow-sm mb-4">
+                     {/* Gift Indication Strip */}
+                     {isGift && <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-lotte-red"></div>}
+
+                     <div className={`flex p-4 gap-4 items-center ${isGift ? 'pl-5' : ''}`}>
+                        {/* Thumbnail */}
+                        <div 
+                           className={`w-14 h-14 rounded-xl bg-cover bg-center shadow-inner shrink-0 ${!isGift ? 'grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100' : ''}`}
+                           style={{ backgroundImage: `url('${t.image}')` }}
+                        ></div>
+
+                        {/* Content */}
+                        <div className="flex-1 min-w-0">
+                           <div className="flex justify-between items-start mb-0.5">
+                              <h3 className="text-sm font-bold text-gray-900 dark:text-white truncate pr-2">{t.title}</h3>
+                              
+                              {/* Status Badge */}
                               {isGift ? (
-                                <span className="text-[9px] bg-red-50 dark:bg-red-900/20 text-lotte-red px-1.5 py-0.5 rounded border border-red-100 dark:border-red-900/30 font-bold uppercase tracking-wider flex items-center gap-1 shrink-0">
-                                   <span className="material-symbols-outlined text-[10px]">redeem</span>
-                                   Gift Sent
-                                </span>
+                                 <span className="shrink-0 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-red-50 dark:bg-red-500/10 text-lotte-red border border-red-100 dark:border-red-500/20">
+                                    <span className="material-symbols-outlined text-[10px]">redeem</span>
+                                    Sent
+                                 </span>
                               ) : (
-                                <span className="text-[9px] bg-gray-100 dark:bg-white/5 text-gray-500 px-1.5 py-0.5 rounded border border-gray-200 dark:border-white/5 font-mono shrink-0">Watched</span>
+                                 <span className="shrink-0 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-gray-100 dark:bg-white/10 text-gray-500 border border-gray-200 dark:border-white/5">
+                                    Watched
+                                 </span>
                               )}
                            </div>
-                           
-                           {isGift ? (
-                              <div className="flex flex-col gap-0.5">
-                                 <p className="text-[10px] text-gray-400 font-mono flex items-center gap-1">
-                                    To: <span className="text-gray-900 dark:text-white font-bold">{t.recipientName}</span>
-                                 </p>
-                                 <p className="text-[10px] text-gray-500">
-                                    {t.category === 'voucher' ? `Value: ${formatKRW(t.balance || 0)}` : t.fullDate}
-                                 </p>
-                              </div>
-                           ) : (
-                              <div className="flex flex-col gap-0.5">
-                                 <p className="text-[11px] text-gray-500 font-mono">{t.date}</p>
-                                 <p className="text-[11px] text-gray-600 font-mono">{t.location}</p>
-                              </div>
-                           )}
+
+                           <div className="flex flex-col gap-0.5">
+                                 {isGift ? (
+                                    <>
+                                       <div className="flex items-center gap-1.5 mb-1">
+                                          <p className="text-xs text-gray-500 dark:text-gray-400">To.</p>
+                                          <p className="text-sm font-bold text-gray-900 dark:text-white">{t.recipientName}</p>
+                                       </div>
+                                       <div className="flex items-center justify-between border-t border-gray-100 dark:border-white/5 pt-2 mt-1">
+                                          <p className="text-[10px] text-gray-400 font-mono">
+                                             {t.category === 'voucher' ? `₩${t.balance?.toLocaleString()}` : t.fullDate}
+                                          </p>
+                                          <button 
+                                             onClick={(e) => handleResendSMS(e, t.recipientName)}
+                                             className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-gray-50 dark:bg-white/10 hover:bg-lotte-red hover:text-white text-[10px] font-bold text-gray-500 transition-colors border border-gray-200 dark:border-white/5"
+                                          >
+                                             <span className="material-symbols-outlined text-[12px]">sms</span>
+                                             Resend
+                                          </button>
+                                       </div>
+                                    </>
+                                 ) : (
+                                    <>
+                                       <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{t.location}</p>
+                                       <p className="text-[10px] text-gray-400 font-mono mt-0.5">{t.date}</p>
+                                    </>
+                                 )}
+                           </div>
                         </div>
                         
-                        <div className="flex flex-col items-end justify-center gap-2">
-                           <div className="size-6 rounded-full flex items-center justify-center text-gray-300 dark:text-gray-600 group-hover:text-primary transition-colors">
-                              <span className="material-symbols-outlined text-lg">chevron_right</span>
+                        {/* Chevron for non-gifts (view details) */}
+                        {!isGift && (
+                           <div className="flex items-center justify-center">
+                              <span className="material-symbols-outlined text-gray-300 dark:text-white/20 group-hover:text-primary transition-colors">chevron_right</span>
                            </div>
-                           {isGift && (
-                             <button className="text-[9px] font-bold text-gray-400 hover:text-primary border border-gray-200 dark:border-white/10 px-1.5 py-0.5 rounded transition-colors whitespace-nowrap">
-                                Resend
-                             </button>
-                           )}
-                        </div>
+                        )}
                      </div>
                   </div>
                 );
