@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { TicketData } from '../types';
 import { MY_TICKETS } from '../constants';
@@ -23,6 +24,7 @@ export interface InquiryData {
 interface AppContextType {
   tickets: TicketData[];
   addTicket: (ticket: TicketData) => void;
+  cancelTicket: (ticketId: string) => void; // Added
   isLoggedIn: boolean;
   login: () => void;
   logout: () => void;
@@ -31,7 +33,7 @@ interface AppContextType {
   toggleLike: (eventId: string) => void;
   // Notifications Logic
   notifications: NotificationItem[];
-  addNotification: (notification: NotificationItem) => void; // Added helper
+  addNotification: (notification: NotificationItem) => void; 
   markAsRead: (id: string) => void;
   unreadCount: number;
   // Wallet Logic
@@ -40,7 +42,7 @@ interface AppContextType {
   chargeBalance: (amount: number) => void;
   addPoints: (amount: number) => void;
   // Deep Logic: Seat Booking & Inquiries
-  bookedSeats: Record<string, string[]>; // eventId -> ['A1', 'B2']
+  bookedSeats: Record<string, string[]>; 
   bookSeat: (eventId: string, seatId: string) => boolean;
   inquiries: InquiryData[];
   addInquiry: (subject: string, content: string) => void;
@@ -103,7 +105,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     const saved = localStorage.getItem('lticket_theme');
-    // Force default to light if not explicitly set to dark
     return saved === 'dark' ? 'dark' : 'light';
   });
 
@@ -141,6 +142,27 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       type: 'success'
     };
     setNotifications(prev => [newNotif, ...prev]);
+  };
+
+  const cancelTicket = (ticketId: string) => {
+    setTickets((prev) => 
+      prev.map(ticket => ticket.id === ticketId ? { ...ticket, status: 'canceled' } : ticket)
+    );
+    
+    // Simulate Refund Notification
+    const newNotif: NotificationItem = {
+        id: `n-${Date.now()}`,
+        title: 'Gift Canceled',
+        message: 'Your gift has been canceled and the amount refunded to your balance.',
+        time: 'Just now',
+        read: false,
+        type: 'info'
+    };
+    setNotifications(prev => [newNotif, ...prev]);
+    
+    // Simulate Refund Balance (Simplified: Adding 50,000 KRW merely as an example, 
+    // real logic would need original price tracking)
+    setUserBalance(prev => prev + 50000);
   };
 
   const addNotification = (notification: NotificationItem) => {
@@ -211,6 +233,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     <AppContext.Provider value={{ 
       tickets, 
       addTicket, 
+      cancelTicket,
       isLoggedIn, 
       login, 
       logout,

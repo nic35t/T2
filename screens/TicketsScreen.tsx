@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IMAGES } from '../constants';
-import { AppScreen, NavigationHandler, TicketData } from '../types';
+import { AppScreen, NavigationHandler, TicketData, SeatGrade } from '../types';
 import { useAppContext } from '../context/AppContext';
 
 interface TicketsScreenProps {
@@ -14,16 +14,29 @@ export const TicketsScreen: React.FC<TicketsScreenProps> = ({ onNavigate }) => {
   const [activeTab, setActiveTab] = useState<TicketTab>('available');
   const [activeIndex, setActiveIndex] = useState(0);
   
-  const { tickets, unreadCount } = useAppContext();
+  // Cancel Logic State
+  const [ticketToCancel, setTicketToCancel] = useState<TicketData | null>(null);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isCanceling, setIsCanceling] = useState(false);
+  
+  const { tickets, unreadCount, cancelTicket } = useAppContext();
+
+  // Toast Timer
+  useEffect(() => {
+    if (toastMessage) {
+      const timer = setTimeout(() => setToastMessage(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toastMessage]);
 
   // Filter tickets logic
   // 'available': Live, Upcoming, Active (Non-gifts only)
   const availableTickets = tickets.filter(t => !t.isGift && ['live', 'upcoming', 'active'].includes(t.status));
   
-  // 'history': Past events OR Gifted tickets (Merged)
+  // 'history': Past events OR Gifted tickets (excluding canceled gifts)
   const historyTickets = tickets.filter(t => 
-    (!t.isGift && t.status === 'past') || // Watched
-    (t.isGift)                            // Sent Gifts
+    ((!t.isGift && t.status === 'past') || (t.isGift)) && t.status !== 'canceled'
   );
   
   const canceledTickets = tickets.filter(t => t.status === 'canceled');
@@ -46,7 +59,26 @@ export const TicketsScreen: React.FC<TicketsScreenProps> = ({ onNavigate }) => {
 
   const handleResendSMS = (e: React.MouseEvent, name?: string) => {
      e.stopPropagation();
-     alert(`SMS has been resent to ${name || 'recipient'}.`);
+     setToastMessage(`SMS has been resent to ${name || 'recipient'}.`);
+  };
+
+  const handleCancelClick = (e: React.MouseEvent, ticket: TicketData) => {
+    e.stopPropagation();
+    setTicketToCancel(ticket);
+    setShowCancelModal(true);
+  };
+
+  const confirmCancel = () => {
+    if (!ticketToCancel) return;
+    
+    setIsCanceling(true);
+    setTimeout(() => {
+        cancelTicket(ticketToCancel.id);
+        setIsCanceling(false);
+        setShowCancelModal(false);
+        setTicketToCancel(null);
+        setToastMessage('Gift has been canceled successfully.');
+    }, 1000);
   };
 
   const formatKRW = (amount: number) => {
@@ -72,6 +104,14 @@ export const TicketsScreen: React.FC<TicketsScreenProps> = ({ onNavigate }) => {
 
   return (
     <div className="bg-gray-100 dark:bg-background-dark min-h-screen pb-28 text-gray-900 dark:text-white font-sans relative overflow-hidden transition-colors duration-300">
+      
+      {/* Toast */}
+      {toastMessage && (
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 bg-white text-black px-6 py-3 rounded-full font-bold shadow-2xl z-[100] animate-fade-in-up border border-gray-200">
+           {toastMessage}
+        </div>
+      )}
+
       {/* Texture Background */}
       <div 
         className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none"
@@ -347,13 +387,21 @@ export const TicketsScreen: React.FC<TicketsScreenProps> = ({ onNavigate }) => {
                                           <p className="text-[10px] text-gray-400 font-mono">
                                              {t.category === 'voucher' ? `₩${t.balance?.toLocaleString()}` : t.fullDate}
                                           </p>
-                                          <button 
-                                             onClick={(e) => handleResendSMS(e, t.recipientName)}
-                                             className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-gray-50 dark:bg-white/10 hover:bg-lotte-red hover:text-white text-[10px] font-bold text-gray-500 transition-colors border border-gray-200 dark:border-white/5"
-                                          >
-                                             <span className="material-symbols-outlined text-[12px]">sms</span>
-                                             Resend
-                                          </button>
+                                          <div className="flex gap-2">
+                                            <button 
+                                                onClick={(e) => handleCancelClick(e, t)}
+                                                className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-[10px] font-bold text-gray-600 dark:text-gray-400 transition-colors border border-gray-200 dark:border-white/5"
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button 
+                                                onClick={(e) => handleResendSMS(e, t.recipientName)}
+                                                className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-gray-50 dark:bg-white/10 hover:bg-lotte-red hover:text-white text-[10px] font-bold text-gray-500 transition-colors border border-gray-200 dark:border-white/5"
+                                            >
+                                                <span className="material-symbols-outlined text-[12px]">sms</span>
+                                                Resend
+                                            </button>
+                                          </div>
                                        </div>
                                     </>
                                  ) : (
@@ -386,14 +434,21 @@ export const TicketsScreen: React.FC<TicketsScreenProps> = ({ onNavigate }) => {
 
         {/* Canceled Tab Content */}
         {activeTab === 'canceled' && (
-          <div className="animate-fade-in flex flex-col items-center justify-center pt-24 text-gray-500 opacity-60">
+          <div className="animate-fade-in flex flex-col items-center justify-center pt-24 text-gray-500 opacity-60 w-full">
              {canceledTickets.length > 0 ? (
-                canceledTickets.map(t => (
-                  <div key={t.id} className="w-full max-w-sm bg-white dark:bg-surface-card p-4 rounded-xl mb-4 border border-gray-200 dark:border-white/5 opacity-50">
-                    <p className="text-gray-900 dark:text-white font-bold">{t.title}</p>
-                    <p className="text-xs text-red-500">Canceled</p>
-                  </div>
-                ))
+                <div className="w-full space-y-3">
+                    {canceledTickets.map(t => (
+                    <div key={t.id} className="w-full bg-white dark:bg-surface-card p-4 rounded-xl border border-gray-200 dark:border-white/5 opacity-50">
+                        <div className="flex justify-between items-start">
+                             <div>
+                                <p className="text-gray-900 dark:text-white font-bold text-sm">{t.title}</p>
+                                {t.isGift && <p className="text-[10px] text-gray-500 mt-0.5">Gift to {t.recipientName}</p>}
+                             </div>
+                             <span className="text-[10px] font-bold text-red-500 bg-red-50 dark:bg-red-900/20 px-2 py-0.5 rounded border border-red-100 dark:border-red-900/30">Canceled</span>
+                        </div>
+                    </div>
+                    ))}
+                </div>
              ) : (
                <>
                  <div className="size-16 rounded-full bg-gray-200 dark:bg-white/5 flex items-center justify-center mb-4">
@@ -405,6 +460,46 @@ export const TicketsScreen: React.FC<TicketsScreenProps> = ({ onNavigate }) => {
           </div>
         )}
       </main>
+
+       {/* Cancel Confirmation Modal */}
+       {showCancelModal && ticketToCancel && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 animate-fade-in">
+          <div 
+            className="absolute inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm"
+            onClick={() => !isCanceling && setShowCancelModal(false)}
+          ></div>
+
+          <div className="relative w-full max-w-sm bg-white dark:bg-surface-card rounded-3xl border border-gray-200 dark:border-white/10 overflow-hidden shadow-2xl animate-fade-in-up">
+            <div className="p-8 flex flex-col items-center">
+               <div className="size-16 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center mb-4 text-gray-600 dark:text-white">
+                  <span className="material-symbols-outlined text-3xl">cancel</span>
+               </div>
+               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 font-serif">Cancel Gift</h3>
+               <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 text-center leading-relaxed">
+                  Are you sure you want to cancel the gift to <span className="text-gray-900 dark:text-white font-bold">{ticketToCancel.recipientName}</span>?
+                  <br/>The amount will be refunded to your balance.
+               </p>
+               
+               <div className="flex gap-3 w-full">
+                   <button 
+                      onClick={() => setShowCancelModal(false)}
+                      disabled={isCanceling}
+                      className="flex-1 h-12 bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-300 font-bold rounded-xl hover:bg-gray-200 dark:hover:bg-white/10 transition-colors text-sm uppercase tracking-wide"
+                   >
+                      Keep Gift
+                   </button>
+                   <button 
+                      onClick={confirmCancel}
+                      disabled={isCanceling}
+                      className="flex-1 h-12 bg-lotte-red text-white font-bold rounded-xl shadow-lg hover:bg-red-700 transition-colors text-sm uppercase tracking-wide flex items-center justify-center"
+                   >
+                      {isCanceling ? <span className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span> : 'Yes, Cancel'}
+                   </button>
+               </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
