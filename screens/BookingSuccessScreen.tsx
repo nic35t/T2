@@ -10,11 +10,13 @@ interface BookingSuccessScreenProps {
     totalSaved: number;
     pointsEarned: number;
     isVoucher?: boolean;
+    isGift?: boolean;
   };
 }
 
 export const BookingSuccessScreen: React.FC<BookingSuccessScreenProps> = ({ onNavigate, data }) => {
   const isVoucher = data?.isVoucher || false;
+  const isGift = data?.isGift || false;
 
   useEffect(() => {
     // Auto redirect after 6 seconds if no interaction
@@ -60,10 +62,10 @@ export const BookingSuccessScreen: React.FC<BookingSuccessScreenProps> = ({ onNa
         </div>
 
         <h1 className="text-3xl font-serif font-bold mb-2 text-white">
-          {isVoucher ? 'Charge Complete' : 'Booking Confirmed'}
+          {isGift ? 'Gift Sent' : (isVoucher ? 'Charge Complete' : 'Booking Confirmed')}
         </h1>
         <p className="text-gray-400 mb-8 font-light">
-          {isVoucher ? 'Your points are ready to use.' : 'See you at the venue.'}
+          {isGift ? 'Recipient will receive a text message.' : (isVoucher ? 'Your points are ready to use.' : 'See you at the venue.')}
         </p>
 
         {/* Benefit Card */}
@@ -98,16 +100,19 @@ export const BookingSuccessScreen: React.FC<BookingSuccessScreenProps> = ({ onNa
         </div>
 
         <div className="flex flex-col gap-3">
-          <button 
-            onClick={() => onNavigate(AppScreen.TICKETS)}
-            className="w-full h-14 bg-lotte-red text-white font-bold rounded-xl shadow-lg hover:bg-red-700 transition-colors uppercase tracking-widest text-sm flex items-center justify-center gap-2"
-          >
-            <span>View Ticket Asset</span>
-            <span className="material-symbols-outlined text-lg">arrow_forward</span>
-          </button>
+          {!isGift && (
+            <button 
+              onClick={() => onNavigate(AppScreen.TICKETS)}
+              className="w-full h-14 bg-lotte-red text-white font-bold rounded-xl shadow-lg hover:bg-red-700 transition-colors uppercase tracking-widest text-sm flex items-center justify-center gap-2"
+            >
+              <span>View Ticket Asset</span>
+              <span className="material-symbols-outlined text-lg">arrow_forward</span>
+            </button>
+          )}
+          
           <button 
             onClick={() => onNavigate(AppScreen.HOME)}
-            className="w-full h-14 bg-transparent text-gray-500 font-bold rounded-xl hover:text-white transition-colors text-sm"
+            className={`w-full h-14 ${isGift ? 'bg-lotte-red text-white shadow-lg' : 'bg-transparent text-gray-500 hover:text-white'} font-bold rounded-xl transition-colors text-sm uppercase tracking-widest`}
           >
             Return Home
           </button>

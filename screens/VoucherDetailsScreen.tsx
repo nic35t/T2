@@ -43,31 +43,31 @@ export const VoucherDetailsScreen: React.FC<VoucherDetailsScreenProps> = ({ even
   ];
 
   return (
-    <div className="relative min-h-screen bg-background text-white animate-fade-in font-sans">
+    <div className="relative min-h-screen bg-gray-50 dark:bg-background text-gray-900 dark:text-white animate-fade-in font-sans transition-colors duration-300">
       {/* Sticky Header - Consistent with EventDetailsScreen */}
       <header className="fixed top-0 left-0 right-0 z-50 flex h-16 items-center justify-between px-4 lg:px-10 bg-gradient-to-b from-black/80 to-transparent pointer-events-none">
         <button 
           onClick={onBack}
-          className="pointer-events-auto size-10 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-colors"
+          className="pointer-events-auto size-10 flex items-center justify-center rounded-full bg-black/20 dark:bg-white/10 backdrop-blur-md text-white hover:bg-black/30 dark:hover:bg-white/20 transition-colors"
         >
           <span className="material-symbols-outlined text-2xl">arrow_back</span>
         </button>
         <div className="flex gap-3 pointer-events-auto">
           <button 
             onClick={handleShare}
-            className="size-10 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-colors"
+            className="size-10 flex items-center justify-center rounded-full bg-black/20 dark:bg-white/10 backdrop-blur-md text-white hover:bg-black/30 dark:hover:bg-white/20 transition-colors"
           >
             <span className="material-symbols-outlined text-2xl">share</span>
           </button>
           <button 
              onClick={() => toggleLike(event.id)}
-             className={`size-10 flex items-center justify-center rounded-full backdrop-blur-md transition-colors ${isLiked ? 'bg-red-500/20 text-red-500' : 'bg-white/10 text-white hover:bg-white/20'}`}
+             className={`size-10 flex items-center justify-center rounded-full backdrop-blur-md transition-colors ${isLiked ? 'bg-red-500/20 text-red-500' : 'bg-black/20 dark:bg-white/10 text-white hover:bg-black/30 dark:hover:bg-white/20'}`}
           >
             <span 
                className="material-symbols-outlined text-2xl transition-transform active:scale-90"
                style={{ fontVariationSettings: isLiked ? "'FILL' 1" : "'FILL' 0" }}
             >
-               favorite_border
+               favorite
             </span>
           </button>
         </div>
@@ -80,7 +80,7 @@ export const VoucherDetailsScreen: React.FC<VoucherDetailsScreenProps> = ({ even
             className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: `url('${event.image}')` }}
           ></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-black/20 lg:bg-gradient-to-r lg:from-transparent lg:to-background/80"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-transparent to-black/30 lg:bg-gradient-to-r lg:from-transparent lg:to-background/80"></div>
           
           <div className="absolute bottom-0 left-0 w-full p-6 lg:p-12 lg:max-w-2xl">
             <div className="flex flex-wrap gap-2 mb-3 lg:mb-6">
@@ -90,8 +90,8 @@ export const VoucherDetailsScreen: React.FC<VoucherDetailsScreenProps> = ({ even
                 </span>
               ))}
             </div>
-            <h1 className="font-serif text-4xl lg:text-7xl font-bold leading-tight mb-2 lg:mb-4 drop-shadow-xl">{event.title}</h1>
-            <div className="flex items-center gap-2 text-gray-300 text-sm lg:text-base">
+            <h1 className="font-serif text-4xl lg:text-7xl font-bold leading-tight mb-2 lg:mb-4 drop-shadow-xl text-white">{event.title}</h1>
+            <div className="flex items-center gap-2 text-gray-200 text-sm lg:text-base">
               <span className="material-symbols-outlined text-[18px] lg:text-[22px] text-primary">storefront</span>
               <span>{event.location}</span>
             </div>
@@ -99,32 +99,32 @@ export const VoucherDetailsScreen: React.FC<VoucherDetailsScreenProps> = ({ even
         </div>
 
         {/* Right Column: Details */}
-        <div className="px-6 py-10 lg:p-20 space-y-12 lg:w-1/2 lg:bg-background/40">
+        <div className="px-6 py-10 lg:p-20 space-y-12 lg:w-1/2 lg:bg-gray-50/50 dark:lg:bg-background/40 flex flex-col bg-gray-50 dark:bg-background transition-colors duration-300">
           
           {/* Quick Stats */}
-          <div className="grid grid-cols-2 gap-4 lg:gap-8 border-b border-white/10 pb-8">
-            <div className="bg-surface-card p-4 rounded-2xl border border-white/5">
+          <div className="grid grid-cols-2 gap-4 lg:gap-8 border-b border-gray-200 dark:border-white/10 pb-8">
+            <div className="bg-white dark:bg-surface-card p-4 rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm">
                <div className="flex items-center gap-2 mb-2 text-primary">
                   <span className="material-symbols-outlined">verified_user</span>
                   <span className="text-[10px] font-bold uppercase tracking-wider font-sans">Validity</span>
                </div>
-               <p className="text-lg font-bold font-mono">5 Years</p>
+               <p className="text-lg font-bold font-mono text-gray-900 dark:text-white">5 Years</p>
                <p className="text-xs text-gray-500">From date of purchase</p>
             </div>
-            <div className="bg-surface-card p-4 rounded-2xl border border-white/5">
+            <div className="bg-white dark:bg-surface-card p-4 rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm">
                <div className="flex items-center gap-2 mb-2 text-primary">
                   <span className="material-symbols-outlined">storefront</span>
                   <span className="text-[10px] font-bold uppercase tracking-wider font-sans">Usage</span>
                </div>
-               <p className="text-lg font-bold font-mono">Online & Offline</p>
+               <p className="text-lg font-bold font-mono text-gray-900 dark:text-white">Online & Offline</p>
                <p className="text-xs text-gray-500">Dept Store, Mart, Hotel</p>
             </div>
           </div>
 
           {/* Description */}
           <div className="space-y-4">
-            <h3 className="text-xl font-serif font-bold">Premium Gift</h3>
-            <p className="text-gray-400 text-sm lg:text-base leading-relaxed font-light">
+            <h3 className="text-xl font-serif font-bold text-gray-900 dark:text-white">Premium Gift</h3>
+            <p className="text-gray-600 dark:text-gray-400 text-sm lg:text-base leading-relaxed font-light">
               {event.description}
               <br/><br/>
               Delivered instantly via L.TICKET mobile wallet. The recipient can use it immediately without exchanging for a physical card. Balance can be managed directly within the app.
@@ -134,17 +134,17 @@ export const VoucherDetailsScreen: React.FC<VoucherDetailsScreenProps> = ({ even
           {/* Usage Info - Enhanced Grid */}
           <div className="space-y-4">
              <div className="flex items-center justify-between">
-                <h3 className="text-xl font-serif font-bold">Where to Use</h3>
+                <h3 className="text-xl font-serif font-bold text-gray-900 dark:text-white">Where to Use</h3>
                 <span className="text-xs text-primary font-bold uppercase tracking-wider">24+ Affiliates</span>
              </div>
              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {usageLocations.map(place => (
-                   <div key={place.name} className="flex items-center gap-4 p-3 rounded-xl bg-surface-card border border-white/5 hover:border-primary/30 transition-all group">
-                      <div className="size-12 rounded-full bg-[#2C2C2E] flex items-center justify-center text-gray-300 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+                   <div key={place.name} className="flex items-center gap-4 p-3 rounded-xl bg-white dark:bg-surface-card border border-gray-200 dark:border-white/5 hover:border-primary/30 transition-all group shadow-sm">
+                      <div className="size-12 rounded-full bg-gray-100 dark:bg-[#2C2C2E] flex items-center justify-center text-gray-400 dark:text-gray-300 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
                          <span className="material-symbols-outlined text-[20px]">{place.icon}</span>
                       </div>
                       <div>
-                        <span className="text-sm font-bold text-white block mb-0.5">{place.name}</span>
+                        <span className="text-sm font-bold text-gray-900 dark:text-white block mb-0.5">{place.name}</span>
                         <span className="text-[10px] text-gray-500 block">{place.desc}</span>
                       </div>
                    </div>
@@ -155,30 +155,30 @@ export const VoucherDetailsScreen: React.FC<VoucherDetailsScreenProps> = ({ even
           {/* Balance Check Info */}
           <div className="space-y-4">
              <div className="flex items-center justify-between">
-                <h3 className="text-xl font-serif font-bold">Balance Check</h3>
+                <h3 className="text-xl font-serif font-bold text-gray-900 dark:text-white">Balance Check</h3>
              </div>
-             <div className="bg-surface-card p-5 rounded-2xl border border-white/5 hover:border-white/10 transition-colors">
+             <div className="bg-white dark:bg-surface-card p-5 rounded-2xl border border-gray-200 dark:border-white/5 hover:border-gray-300 dark:hover:border-white/10 transition-colors shadow-sm">
                 <div className="flex items-start gap-4">
                    <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0 text-primary">
                       <span className="material-symbols-outlined">account_balance_wallet</span>
                    </div>
                    <div className="space-y-3">
-                      <p className="text-sm text-gray-300 font-medium">Real-time Balance Inquiry</p>
-                      <p className="text-xs text-gray-500 leading-relaxed">
+                      <p className="text-sm text-gray-900 dark:text-gray-300 font-medium">Real-time Balance Inquiry</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-500 leading-relaxed">
                          Remaining balance is automatically updated after each use. You can check it:
                       </p>
                       <ul className="space-y-2">
-                         <li className="flex items-center gap-2 text-xs text-gray-400">
+                         <li className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
                             <span className="size-1.5 rounded-full bg-primary"></span>
-                            In App: <span className="text-gray-300">My Wallet &gt; Voucher Card</span>
+                            In App: <span className="text-gray-700 dark:text-gray-300">My Wallet &gt; Voucher Card</span>
                          </li>
-                         <li className="flex items-center gap-2 text-xs text-gray-400">
+                         <li className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
                             <span className="size-1.5 rounded-full bg-primary"></span>
-                            Linked Service: <span className="text-gray-300">L.POINT App &gt; Gift Cards</span>
+                            Linked Service: <span className="text-gray-700 dark:text-gray-300">L.POINT App &gt; Gift Cards</span>
                          </li>
-                         <li className="flex items-center gap-2 text-xs text-gray-400">
+                         <li className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
                             <span className="size-1.5 rounded-full bg-primary"></span>
-                            Receipt: <span className="text-gray-300">Printed on purchase receipt</span>
+                            Receipt: <span className="text-gray-700 dark:text-gray-300">Printed on purchase receipt</span>
                          </li>
                       </ul>
                    </div>
@@ -191,12 +191,12 @@ export const VoucherDetailsScreen: React.FC<VoucherDetailsScreenProps> = ({ even
       </div>
 
       {/* Sticky Footer */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 lg:p-6 bg-background/90 backdrop-blur-xl border-t border-white/10 z-40">
+      <div className="fixed bottom-0 left-0 right-0 p-4 lg:p-6 bg-white/90 dark:bg-background/90 backdrop-blur-xl border-t border-gray-200 dark:border-white/10 z-40 transition-colors">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-6">
           <div className="flex flex-col">
             <span className="text-[10px] lg:text-xs text-gray-500 uppercase font-bold tracking-[0.2em] font-sans">TOTAL PRICE</span>
             <div className="flex items-baseline gap-2">
-              <span className="text-2xl lg:text-4xl font-medium font-mono text-white tracking-tighter">{formatKRW(event.price)}</span>
+              <span className="text-2xl lg:text-4xl font-medium font-mono text-gray-900 dark:text-white tracking-tighter">{formatKRW(event.price)}</span>
             </div>
           </div>
           <button 

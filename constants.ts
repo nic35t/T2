@@ -7,6 +7,7 @@ export const IMAGES = {
   spotlight: "https://lh3.googleusercontent.com/aida-public/AB6AXuA2Nm6qW1fUdC2Htyf0IOpxxENeJzuifw6ZoHpmxvvl6NDMiwjt7B1kOZ9FdnLItDu4CK9nZCeeYb4xlW6Rko0xneOKy0QwLTTXFaUVf0gDxefKwMHbS0CSKFhXURJjBbFmDhhXXusDKHUvSQYzOcsSCUfbsF889cU7-P_iyKMlVKRmeNNqJOQTJ2bbRMUTxoMsG0vwKGNqp3JB-Ut24kFfcmkflzuzGc5QH8PRBUgqpIwQkUlLZs8zWBE_6kOhHaTms-Bw0CHwaVg", 
   onboarding: "https://lh3.googleusercontent.com/aida-public/AB6AXuCxxmOPgv3VSyjfWypEuwtrmxvGduQvd10ozFjUkVDf6cx99L4api5JIzZKgnsV9V4yilZXEiIoX57MoI6hUxw4se5rnhKzEpfiCQQPS1ScqoSE3HXJ_5zFCa7OntpVN1U0mfQz6GE87nQ7X2VyGmydSlNSl8Kh_5JoiVFnmHUUTou2lNdWlaN7QRBrwX5koLprP4MS8f-3fQhqkCZ7DY2L4zgyD-hl1dUH7Eg_sP935N1fkYIg_cZNIZMZmpXzvJKGktisT6UCSRE", 
   profile: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1600&auto=format&fit=crop", // Profile placeholder
+  ad_banner: "https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?q=80&w=1000&auto=format&fit=crop", // Credit Card / Payment Lifestyle
 
   // Performance Key Art (Updated to AIDA Public Links & Wikimedia/Unsplash)
   phantom: "https://lh3.googleusercontent.com/aida-public/AB6AXuA-ybED2d55gcGZ_zibev__u3vwYT9CkCntmvCgQjcyCOhTlGFNrwCVcwxRfpxJhGdvt6CKCBxoLcUw_DJLo0FB04tUY3aCViVqBGADDAM5LGAfVV34Ogyv75Q5f3Ht2HZySlk7hQZBTpaEaWgzXg8JlY7BWxgC6jFLZfIA6vTH0ys1qMIAdxv-2s4bHWwN-t8OFXU6-gMyRml1VLcs8XO2ECqZ9UEx2-y88GjFltEq1xfjYR2Zxd70NVtJ_NQEgZZcrPe3c9OMmYA", // Phantom (AIDA)

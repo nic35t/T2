@@ -13,14 +13,14 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentScreen, onNavigate 
     const isActive = currentScreen === screen || (screen === AppScreen.MY && currentScreen === AppScreen.CUSTOMER_CENTER);
     
     return `material-symbols-outlined text-[26px] transition-all duration-300 ${
-      isActive ? 'text-primary scale-110 drop-shadow-[0_0_8px_rgba(212,175,55,0.6)]' : 'text-gray-500 group-hover:text-gray-300'
+      isActive ? 'text-primary scale-110 drop-shadow-[0_0_8px_rgba(212,175,55,0.6)]' : 'text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300'
     }`;
   };
 
   const getTextClass = (screen: AppScreen) => {
     const isActive = currentScreen === screen || (screen === AppScreen.MY && currentScreen === AppScreen.CUSTOMER_CENTER);
     return `text-[10px] font-bold tracking-wider uppercase mt-1 transition-colors ${
-      isActive ? 'text-primary' : 'text-gray-500 group-hover:text-gray-300'
+      isActive ? 'text-primary' : 'text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300'
     }`;
   };
 
@@ -32,7 +32,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentScreen, onNavigate 
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-[#121212]/80 backdrop-blur-xl border-t border-white/5 pb-[env(safe-area-inset-bottom)] pt-2">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/80 dark:bg-[#121212]/80 backdrop-blur-xl border-t border-gray-200 dark:border-white/5 pb-[env(safe-area-inset-bottom)] pt-2 transition-colors duration-300">
       <div className="max-w-md mx-auto flex items-center justify-around h-16 px-2">
         {navItems.map((item) => (
           <button

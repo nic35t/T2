@@ -43,15 +43,15 @@ export const TicketQRScreen: React.FC<TicketQRScreenProps> = ({ ticket, onNaviga
   const displayId = ticket?.id?.toUpperCase() || 'NO-ID';
 
   return (
-    <div className="relative h-screen w-full bg-[#0F0F12] flex flex-col animate-fade-in z-50 overflow-hidden perspective-1000">
+    <div className="relative h-screen w-full bg-gray-200 dark:bg-[#0F0F12] flex flex-col animate-fade-in z-50 overflow-hidden perspective-1000 transition-colors duration-300">
       
       {/* Background Texture */}
-      <div className="absolute inset-0 z-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+      <div className="absolute inset-0 z-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] mix-blend-multiply dark:mix-blend-overlay"></div>
 
       {/* Close Button */}
       <button 
         onClick={onBack}
-        className="absolute top-[env(safe-area-inset-top,24px)] right-6 size-10 rounded-full bg-[#1E1E24] text-white flex items-center justify-center z-20 border border-white/10 hover:border-primary/50 transition-colors mt-4"
+        className="absolute top-[env(safe-area-inset-top,24px)] right-6 size-10 rounded-full bg-white dark:bg-[#1E1E24] text-black dark:text-white flex items-center justify-center z-20 border border-black/5 dark:border-white/10 hover:border-primary/50 transition-colors mt-4 shadow-md"
       >
         <span className="material-symbols-outlined">close</span>
       </button>
@@ -94,9 +94,9 @@ export const TicketQRScreen: React.FC<TicketQRScreenProps> = ({ ticket, onNaviga
 
                {/* Top Section */}
                <div className="p-8 pb-6 bg-[#1E1E24] flex flex-col items-center border-b-2 border-dashed border-gray-700 relative text-white">
-                  {/* Punch Holes */}
-                  <div className="absolute -left-4 bottom-[-10px] size-8 rounded-full bg-[#0F0F12]"></div>
-                  <div className="absolute -right-4 bottom-[-10px] size-8 rounded-full bg-[#0F0F12]"></div>
+                  {/* Punch Holes - color adapted to parent background */}
+                  <div className="absolute -left-4 bottom-[-10px] size-8 rounded-full bg-gray-200 dark:bg-[#0F0F12] transition-colors duration-300"></div>
+                  <div className="absolute -right-4 bottom-[-10px] size-8 rounded-full bg-gray-200 dark:bg-[#0F0F12] transition-colors duration-300"></div>
 
                   <h2 className="font-serif text-2xl font-bold text-center mb-1 text-white">{displayTitle}</h2>
                   <p className="text-gray-400 text-sm font-medium mb-6">{displayDate} • {displayTime}</p>
@@ -134,7 +134,7 @@ export const TicketQRScreen: React.FC<TicketQRScreenProps> = ({ ticket, onNaviga
          </div>
 
          {/* Trust Indicator */}
-         <div className="mt-12 flex items-center gap-2 text-white/30 animate-pulse">
+         <div className="mt-12 flex items-center gap-2 text-gray-500 dark:text-white/30 animate-pulse transition-colors">
             <span className="material-symbols-outlined text-lg">fingerprint</span>
             <span className="text-xs font-bold uppercase tracking-widest">L.TICKET Authenticated</span>
          </div>

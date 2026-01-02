@@ -33,7 +33,7 @@ export const CustomerCenterScreen: React.FC<CustomerCenterScreenProps> = ({ init
     return (
       <button 
         onClick={() => setActiveTab(tab)}
-        className={`flex-1 py-4 relative transition-colors ${isActive ? 'text-primary font-bold' : 'text-gray-500 font-medium'}`}
+        className={`flex-1 py-4 relative transition-colors ${isActive ? 'text-primary font-bold' : 'text-gray-500 font-medium hover:text-gray-900 dark:hover:text-white'}`}
       >
         {label}
         {isActive && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary shadow-glow"></div>}
@@ -50,16 +50,16 @@ export const CustomerCenterScreen: React.FC<CustomerCenterScreenProps> = ({ init
   };
 
   return (
-    <div className="bg-background min-h-screen text-white font-sans animate-fade-in flex flex-col">
-      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-white/5 px-4 h-16 flex items-center gap-4">
-         <button onClick={onBack} className="size-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition-colors">
+    <div className="bg-gray-50 dark:bg-background min-h-screen text-gray-900 dark:text-white font-sans animate-fade-in flex flex-col transition-colors duration-300">
+      <header className="sticky top-0 z-50 bg-white/80 dark:bg-background/80 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 px-4 h-16 flex items-center gap-4 transition-colors">
+         <button onClick={onBack} className="size-10 flex items-center justify-center rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors">
             <span className="material-symbols-outlined">arrow_back</span>
          </button>
          <h1 className="text-lg font-serif font-bold">Customer Center</h1>
       </header>
 
       {/* Tabs */}
-      <div className="flex border-b border-white/5 bg-background sticky top-16 z-40">
+      <div className="flex border-b border-gray-200 dark:border-white/5 bg-white dark:bg-background sticky top-16 z-40 transition-colors">
         {renderTabButton('NOTICE', 'Notices')}
         {renderTabButton('FAQ', 'FAQ')}
         {renderTabButton('INQUIRY', '1:1 Inquiry')}
@@ -69,14 +69,14 @@ export const CustomerCenterScreen: React.FC<CustomerCenterScreenProps> = ({ init
         {activeTab === 'NOTICE' && (
           <div className="space-y-3 animate-fade-in-up">
              {MOCK_NOTICES.map(notice => (
-               <div key={notice.id} className="bg-surface-card border border-white/5 rounded-xl p-4 hover:border-white/10 transition-colors">
+               <div key={notice.id} className="bg-white dark:bg-surface-card border border-gray-200 dark:border-white/5 rounded-xl p-4 hover:border-primary/30 dark:hover:border-white/10 transition-colors shadow-sm">
                   <div className="flex items-center gap-2 mb-2">
-                     <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase ${notice.isImportant ? 'bg-red-500/20 text-red-500' : 'bg-white/10 text-gray-400'}`}>
+                     <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase ${notice.isImportant ? 'bg-red-500/10 text-red-500' : 'bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-gray-400'}`}>
                         {notice.category}
                      </span>
-                     <span className="text-[10px] text-gray-500 font-mono">{notice.date}</span>
+                     <span className="text-[10px] text-gray-400 dark:text-gray-500 font-mono">{notice.date}</span>
                   </div>
-                  <h3 className="text-sm font-bold text-white mb-1">{notice.title}</h3>
+                  <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-1">{notice.title}</h3>
                </div>
              ))}
           </div>
@@ -85,17 +85,17 @@ export const CustomerCenterScreen: React.FC<CustomerCenterScreenProps> = ({ init
         {activeTab === 'FAQ' && (
           <div className="space-y-3 animate-fade-in-up">
             {MOCK_FAQS.map(faq => (
-              <div key={faq.id} className="bg-surface-card border border-white/5 rounded-xl overflow-hidden">
+              <div key={faq.id} className="bg-white dark:bg-surface-card border border-gray-200 dark:border-white/5 rounded-xl overflow-hidden shadow-sm">
                 <button 
                   onClick={() => setExpandedFaq(expandedFaq === faq.id ? null : faq.id)}
                   className="w-full p-4 flex justify-between items-center text-left"
                 >
-                  <span className="text-sm font-bold text-white pr-4"><span className="text-primary mr-2">Q.</span>{faq.q}</span>
-                  <span className={`material-symbols-outlined text-gray-500 transition-transform ${expandedFaq === faq.id ? 'rotate-180' : ''}`}>expand_more</span>
+                  <span className="text-sm font-bold text-gray-900 dark:text-white pr-4"><span className="text-primary mr-2">Q.</span>{faq.q}</span>
+                  <span className={`material-symbols-outlined text-gray-400 dark:text-gray-500 transition-transform ${expandedFaq === faq.id ? 'rotate-180' : ''}`}>expand_more</span>
                 </button>
                 {expandedFaq === faq.id && (
-                  <div className="p-4 pt-0 bg-white/5 border-t border-white/5">
-                    <p className="text-xs text-gray-300 leading-relaxed"><span className="text-primary font-bold mr-2">A.</span>{faq.a}</p>
+                  <div className="p-4 pt-0 bg-gray-50 dark:bg-white/5 border-t border-gray-200 dark:border-white/5">
+                    <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed"><span className="text-primary font-bold mr-2">A.</span>{faq.a}</p>
                   </div>
                 )}
               </div>
@@ -105,15 +105,15 @@ export const CustomerCenterScreen: React.FC<CustomerCenterScreenProps> = ({ init
 
         {activeTab === 'INQUIRY' && (
           <div className="animate-fade-in-up pb-10">
-            <div className="bg-surface-card/50 p-4 rounded-xl border border-white/5 mb-6">
-               <p className="text-xs text-gray-400 leading-relaxed">
+            <div className="bg-white/80 dark:bg-surface-card/50 p-4 rounded-xl border border-gray-200 dark:border-white/5 mb-6 shadow-sm">
+               <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
                   We will respond to your inquiry within 24 hours. <br/>
                   Operating Hours: Mon-Fri, 09:00 - 18:00
                </p>
             </div>
             
-            <form onSubmit={handleSubmitInquiry} className="space-y-4 mb-10 border-b border-white/10 pb-10">
-               <h3 className="text-sm font-serif font-bold text-white">New Inquiry</h3>
+            <form onSubmit={handleSubmitInquiry} className="space-y-4 mb-10 border-b border-gray-200 dark:border-white/10 pb-10">
+               <h3 className="text-sm font-serif font-bold text-gray-900 dark:text-white">New Inquiry</h3>
                <div>
                   <label className="text-xs font-bold text-gray-500 uppercase mb-1.5 block">Subject</label>
                   <input 
@@ -121,7 +121,7 @@ export const CustomerCenterScreen: React.FC<CustomerCenterScreenProps> = ({ init
                     value={inquirySubject}
                     onChange={(e) => setInquirySubject(e.target.value)}
                     required
-                    className="w-full h-12 bg-white/5 border border-white/10 rounded-xl px-4 text-white focus:border-primary focus:outline-none transition-colors text-sm" 
+                    className="w-full h-12 bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-xl px-4 text-gray-900 dark:text-white focus:border-primary focus:outline-none transition-colors text-sm shadow-sm" 
                     placeholder="Enter the subject" 
                   />
                </div>
@@ -131,7 +131,7 @@ export const CustomerCenterScreen: React.FC<CustomerCenterScreenProps> = ({ init
                     value={inquiryContent}
                     onChange={(e) => setInquiryContent(e.target.value)}
                     required
-                    className="w-full h-40 bg-white/5 border border-white/10 rounded-xl p-4 text-white focus:border-primary focus:outline-none transition-colors text-sm resize-none" 
+                    className="w-full h-40 bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-xl p-4 text-gray-900 dark:text-white focus:border-primary focus:outline-none transition-colors text-sm resize-none shadow-sm" 
                     placeholder="Describe your issue in detail" 
                   />
                </div>
@@ -144,23 +144,23 @@ export const CustomerCenterScreen: React.FC<CustomerCenterScreenProps> = ({ init
             </form>
 
             {/* Inquiry History */}
-            <h3 className="text-sm font-serif font-bold text-white mb-4">My Inquiries ({inquiries.length})</h3>
+            <h3 className="text-sm font-serif font-bold text-gray-900 dark:text-white mb-4">My Inquiries ({inquiries.length})</h3>
             <div className="space-y-3">
               {inquiries.length === 0 ? (
                 <p className="text-xs text-gray-500 text-center py-8">No inquiry history.</p>
               ) : (
                 inquiries.map((inq) => (
-                  <div key={inq.id} className="bg-surface-card border border-white/5 rounded-xl p-4">
+                  <div key={inq.id} className="bg-white dark:bg-surface-card border border-gray-200 dark:border-white/5 rounded-xl p-4 shadow-sm">
                     <div className="flex justify-between items-start mb-2">
                        <div>
-                         <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase mr-2 ${inq.status === 'PENDING' ? 'bg-gray-700 text-gray-300' : 'bg-primary/20 text-primary'}`}>
+                         <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase mr-2 ${inq.status === 'PENDING' ? 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' : 'bg-primary/20 text-primary'}`}>
                             {inq.status}
                          </span>
-                         <span className="text-[10px] text-gray-500 font-mono">{inq.date}</span>
+                         <span className="text-[10px] text-gray-400 dark:text-gray-500 font-mono">{inq.date}</span>
                        </div>
                     </div>
-                    <p className="text-sm font-bold text-white mb-1">{inq.subject}</p>
-                    <p className="text-xs text-gray-400 line-clamp-2">{inq.content}</p>
+                    <p className="text-sm font-bold text-gray-900 dark:text-white mb-1">{inq.subject}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2">{inq.content}</p>
                   </div>
                 ))
               )}

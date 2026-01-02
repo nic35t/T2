@@ -46,7 +46,7 @@ export const TicketsScreen: React.FC<TicketsScreenProps> = ({ onNavigate }) => {
     return (
       <button 
         onClick={() => setActiveTab(tab)}
-        className={`relative flex-1 py-3 text-center transition-colors ${isActive ? 'text-primary' : 'text-gray-500 hover:text-gray-300'}`}
+        className={`relative flex-1 py-3 text-center transition-colors ${isActive ? 'text-primary' : 'text-gray-500 hover:text-gray-400'}`}
       >
         <span className={`font-bold text-sm tracking-wide ${isActive ? '' : 'font-medium'}`}>
           {label} {count !== undefined && `(${count})`}
@@ -59,23 +59,23 @@ export const TicketsScreen: React.FC<TicketsScreenProps> = ({ onNavigate }) => {
   };
 
   return (
-    <div className="bg-background-dark min-h-screen pb-28 text-white font-sans relative overflow-hidden">
+    <div className="bg-gray-100 dark:bg-background-dark min-h-screen pb-28 text-gray-900 dark:text-white font-sans relative overflow-hidden transition-colors duration-300">
       {/* Texture Background */}
       <div 
-        className="absolute inset-0 z-0 opacity-[0.05] pointer-events-none"
+        className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none"
         style={{ backgroundImage: `url('${IMAGES.texture}')`, backgroundSize: 'cover' }}
       ></div>
 
-      <header className="sticky top-0 z-50 bg-background-dark/80 backdrop-blur-xl border-b border-white/5 transition-all">
+      <header className="sticky top-0 z-50 bg-gray-100/80 dark:bg-background-dark/80 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 transition-colors">
         <div className="flex items-center justify-between px-5 h-16 pt-2">
-          <h1 className="text-xl font-serif font-bold tracking-tight text-white">My Wallet</h1>
+          <h1 className="text-xl font-serif font-bold tracking-tight text-gray-900 dark:text-white">My Wallet</h1>
           <button 
              onClick={() => onNavigate?.(AppScreen.NOTIFICATIONS)}
-             className="size-10 flex items-center justify-center rounded-full bg-white/5 border border-white/5 text-gray-400 hover:text-white transition-all hover:bg-white/10 relative"
+             className="size-10 flex items-center justify-center rounded-full bg-white dark:bg-white/5 border border-gray-200 dark:border-white/5 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-white transition-all hover:bg-gray-50 dark:hover:bg-white/10 relative shadow-sm dark:shadow-none"
           >
             <span className="material-symbols-outlined text-[20px]">notifications</span>
             {unreadCount > 0 && (
-               <span className="absolute top-2 right-2 size-2.5 bg-red-500 rounded-full border border-background shadow-sm"></span>
+               <span className="absolute top-2 right-2 size-2.5 bg-red-500 rounded-full border border-gray-100 dark:border-background shadow-sm"></span>
             )}
           </button>
         </div>
@@ -93,9 +93,9 @@ export const TicketsScreen: React.FC<TicketsScreenProps> = ({ onNavigate }) => {
             {availableTickets.length > 0 ? (
               <>
                 {/* Info Banner */}
-                <div className="bg-surface-card border border-primary/20 rounded-xl p-4 flex items-start gap-3 mb-8 mx-1 shadow-sm">
+                <div className="bg-white dark:bg-surface-card border border-primary/20 rounded-xl p-4 flex items-start gap-3 mb-8 mx-1 shadow-sm transition-colors">
                   <span className="material-symbols-outlined text-primary text-lg shrink-0 mt-0.5">info</span>
-                  <p className="text-xs text-gray-400 leading-relaxed font-light">
+                  <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed font-light">
                     Present the QR code at the counter or scan at the kiosk.
                   </p>
                 </div>
@@ -139,7 +139,7 @@ export const TicketsScreen: React.FC<TicketsScreenProps> = ({ onNavigate }) => {
                       </div>
 
                       {/* Ticket Details */}
-                      <div className="px-6 pb-6 bg-surface-card relative pt-4">
+                      <div className="px-6 pb-6 bg-surface-card relative pt-4 text-white">
                          <div className="relative flex items-center justify-between mb-5 opacity-30">
                             <div className="w-3 h-6 bg-background rounded-r-full absolute -left-6"></div>
                             <div className="flex-1 border-t-2 border-dashed border-white mx-1"></div>
@@ -270,7 +270,7 @@ export const TicketsScreen: React.FC<TicketsScreenProps> = ({ onNavigate }) => {
                 )}
               </>
             ) : (
-              <div className="flex flex-col items-center justify-center pt-20 text-gray-500">
+              <div className="flex flex-col items-center justify-center pt-20 text-gray-400 dark:text-gray-500">
                 <span className="material-symbols-outlined text-4xl mb-2 opacity-50">account_balance_wallet</span>
                 <p className="text-sm">Wallet is empty</p>
               </div>
@@ -283,28 +283,28 @@ export const TicketsScreen: React.FC<TicketsScreenProps> = ({ onNavigate }) => {
           <div className="animate-fade-in space-y-4">
              <div className="relative py-4 mb-2">
                <div aria-hidden="true" className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-white/10"></div>
+                  <div className="w-full border-t border-gray-300 dark:border-white/10"></div>
                </div>
                <div className="relative flex justify-center">
-                  <span className="bg-background-dark px-4 text-[10px] text-gray-500 font-bold uppercase tracking-[0.2em] font-mono">2023</span>
+                  <span className="bg-gray-100 dark:bg-background-dark px-4 text-[10px] text-gray-500 font-bold uppercase tracking-[0.2em] font-mono">2023</span>
                </div>
             </div>
 
             {historyTickets.length > 0 ? (
               historyTickets.map((t) => (
-                <div key={t.id} className="bg-[#151517] rounded-2xl overflow-hidden border border-white/5 hover:border-white/10 transition-colors mx-auto w-full max-w-sm cursor-pointer group mb-4">
+                <div key={t.id} className="bg-white dark:bg-[#151517] rounded-2xl overflow-hidden border border-gray-200 dark:border-white/5 hover:border-gray-300 dark:hover:border-white/10 transition-colors mx-auto w-full max-w-sm cursor-pointer group mb-4 shadow-sm">
                    <div className="flex p-4 gap-4">
-                      <div className="w-14 h-18 bg-gray-800 rounded-lg bg-cover bg-center grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all" style={{ backgroundImage: `url('${t.image}')` }}></div>
+                      <div className="w-14 h-18 bg-gray-200 dark:bg-gray-800 rounded-lg bg-cover bg-center grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all" style={{ backgroundImage: `url('${t.image}')` }}></div>
                       <div className="flex-1 flex flex-col justify-center gap-1">
                          <div className="flex justify-between items-start">
-                            <h3 className="font-serif text-sm font-bold text-gray-300 group-hover:text-white transition-colors">{t.title}</h3>
-                            <span className="text-[9px] bg-white/5 text-gray-500 px-1.5 py-0.5 rounded border border-white/5 font-mono">Watched</span>
+                            <h3 className="font-serif text-sm font-bold text-gray-900 dark:text-gray-300 group-hover:text-primary dark:group-hover:text-white transition-colors">{t.title}</h3>
+                            <span className="text-[9px] bg-gray-100 dark:bg-white/5 text-gray-500 px-1.5 py-0.5 rounded border border-gray-200 dark:border-white/5 font-mono">Watched</span>
                          </div>
                          <p className="text-[11px] text-gray-500 font-mono">{t.date}</p>
                          <p className="text-[11px] text-gray-600 font-mono">{t.location}</p>
                       </div>
                       <div className="flex items-center justify-center px-1">
-                         <span className="material-symbols-outlined text-gray-600 group-hover:text-white transition-colors">chevron_right</span>
+                         <span className="material-symbols-outlined text-gray-400 dark:text-gray-600 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">chevron_right</span>
                       </div>
                    </div>
                 </div>
@@ -322,14 +322,14 @@ export const TicketsScreen: React.FC<TicketsScreenProps> = ({ onNavigate }) => {
           <div className="animate-fade-in flex flex-col items-center justify-center pt-24 text-gray-500 opacity-60">
              {canceledTickets.length > 0 ? (
                 canceledTickets.map(t => (
-                  <div key={t.id} className="w-full max-w-sm bg-surface-card p-4 rounded-xl mb-4 border border-white/5 opacity-50">
-                    <p className="text-white font-bold">{t.title}</p>
+                  <div key={t.id} className="w-full max-w-sm bg-white dark:bg-surface-card p-4 rounded-xl mb-4 border border-gray-200 dark:border-white/5 opacity-50">
+                    <p className="text-gray-900 dark:text-white font-bold">{t.title}</p>
                     <p className="text-xs text-red-500">Canceled</p>
                   </div>
                 ))
              ) : (
                <>
-                 <div className="size-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
+                 <div className="size-16 rounded-full bg-gray-200 dark:bg-white/5 flex items-center justify-center mb-4">
                    <span className="material-symbols-outlined text-3xl">event_busy</span>
                  </div>
                  <p className="text-sm font-medium">No canceled tickets found</p>

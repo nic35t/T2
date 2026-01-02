@@ -107,18 +107,18 @@ export const VoucherPurchaseScreen: React.FC<VoucherPurchaseScreenProps> = ({ ev
   };
 
   return (
-    <div className="relative h-screen bg-[#0F0F12] text-white flex flex-col animate-fade-in font-sans">
+    <div className="relative h-screen bg-gray-50 dark:bg-[#0F0F12] text-gray-900 dark:text-white flex flex-col animate-fade-in font-sans transition-colors duration-300">
       
       {/* React Toast */}
       {toastMessage && (
-        <div className="fixed top-10 left-1/2 -translate-x-1/2 bg-white text-black px-6 py-3 rounded-full font-bold shadow-2xl z-[100] animate-fade-in-up">
+        <div className="fixed top-10 left-1/2 -translate-x-1/2 bg-white text-black px-6 py-3 rounded-full font-bold shadow-2xl z-[100] animate-fade-in-up border border-gray-200">
            {toastMessage}
         </div>
       )}
 
-      <header className="flex items-center justify-between px-4 h-16 border-b border-white/5 bg-[#0F0F12] z-20">
+      <header className="flex items-center justify-between px-4 h-16 border-b border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-[#0F0F12] z-20 transition-colors">
         <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
-          <button onClick={onBack} className="text-white hover:text-primary transition-colors">
+          <button onClick={onBack} className="text-gray-900 dark:text-white hover:text-primary transition-colors">
             <span className="material-symbols-outlined">arrow_back</span>
           </button>
           <span className="font-serif font-bold text-lg">Purchase Voucher</span>
@@ -130,10 +130,10 @@ export const VoucherPurchaseScreen: React.FC<VoucherPurchaseScreenProps> = ({ ev
         <div className="max-w-xl mx-auto w-full space-y-8">
            
            {/* Product Summary */}
-           <div className="flex items-center gap-4 bg-surface-card p-4 rounded-2xl border border-white/5 shadow-lg">
+           <div className="flex items-center gap-4 bg-white dark:bg-surface-card p-4 rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm transition-colors">
               <div className="size-16 rounded-xl bg-cover bg-center shrink-0" style={{ backgroundImage: `url('${event.image}')` }}></div>
               <div>
-                 <h2 className="font-bold text-white text-lg">{event.title}</h2>
+                 <h2 className="font-bold text-gray-900 dark:text-white text-lg">{event.title}</h2>
                  <p className="text-xs text-primary font-bold uppercase tracking-wider">Premium Digital Asset</p>
               </div>
            </div>
@@ -151,14 +151,14 @@ export const VoucherPurchaseScreen: React.FC<VoucherPurchaseScreenProps> = ({ ev
                           className={`relative h-20 rounded-xl px-5 flex items-center justify-between transition-all duration-300 group overflow-hidden ${
                              isSelected 
                              ? 'bg-gradient-to-r from-primary to-[#F3E5AB] text-black shadow-[0_0_20px_rgba(212,175,55,0.4)] scale-[1.02] border-none' 
-                             : 'bg-surface-card text-white border border-white/10 hover:border-white/30'
+                             : 'bg-white dark:bg-surface-card text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 hover:border-primary/30 dark:hover:border-white/30'
                           }`}
                         >
                            {/* Shine Effect */}
                            {isSelected && <div className="absolute inset-0 bg-white/20 animate-pulse-slow"></div>}
                            
                            <div className="flex flex-col items-start relative z-10">
-                              <span className={`font-bold text-xl font-mono tracking-tight ${isSelected ? 'text-black' : 'text-white'}`}>{formatKRW(opt.val)}</span>
+                              <span className={`font-bold text-xl font-mono tracking-tight ${isSelected ? 'text-black' : 'text-gray-900 dark:text-white'}`}>{formatKRW(opt.val)}</span>
                            </div>
                            <div className="flex flex-col items-end relative z-10">
                               <span className={`font-bold text-sm ${isSelected ? 'text-black' : 'text-primary'}`}>+{formatKRW(opt.bonus)}</span>
@@ -173,36 +173,36 @@ export const VoucherPurchaseScreen: React.FC<VoucherPurchaseScreenProps> = ({ ev
            </div>
 
            {/* Gifting Option */}
-           <div className="bg-gradient-to-r from-surface-card to-surface-card/50 p-5 rounded-2xl border border-white/5 flex items-center justify-between">
+           <div className="bg-gradient-to-r from-white to-gray-100 dark:from-surface-card dark:to-surface-card/50 p-5 rounded-2xl border border-gray-200 dark:border-white/5 flex items-center justify-between shadow-sm">
               <div className="flex items-center gap-3">
-                 <div className="size-10 rounded-full bg-lotte-red/20 flex items-center justify-center text-lotte-red shadow-[0_0_10px_rgba(218,41,28,0.2)]">
+                 <div className="size-10 rounded-full bg-lotte-red/10 dark:bg-lotte-red/20 flex items-center justify-center text-lotte-red shadow-sm">
                     <span className="material-symbols-outlined">redeem</span>
                  </div>
                  <div>
-                    <p className="font-bold text-sm text-white">Gift to Friend</p>
+                    <p className="font-bold text-sm text-gray-900 dark:text-white">Gift to Friend</p>
                     <p className="text-xs text-gray-500">Send via SMS instantly</p>
                  </div>
               </div>
               <div 
                  onClick={() => setIsGift(!isGift)}
-                 className={`w-12 h-7 rounded-full relative transition-colors cursor-pointer ${isGift ? 'bg-lotte-red' : 'bg-gray-700'}`}
+                 className={`w-12 h-7 rounded-full relative transition-colors cursor-pointer ${isGift ? 'bg-lotte-red' : 'bg-gray-300 dark:bg-gray-700'}`}
               >
-                 <div className={`absolute top-1 size-5 rounded-full bg-white transition-transform ${isGift ? 'left-6' : 'left-1'}`}></div>
+                 <div className={`absolute top-1 size-5 rounded-full bg-white transition-transform ${isGift ? 'left-6' : 'left-1'} shadow-sm`}></div>
               </div>
            </div>
 
            {/* Calculation Summary */}
-           <div className="border-t border-dashed border-white/10 pt-6">
+           <div className="border-t border-dashed border-gray-200 dark:border-white/10 pt-6">
               <div className="flex justify-between items-center mb-2">
-                 <span className="text-gray-400 text-sm">Payment Amount</span>
-                 <span className="text-white font-bold">{formatKRW(amount)}</span>
+                 <span className="text-gray-500 dark:text-gray-400 text-sm">Payment Amount</span>
+                 <span className="text-gray-900 dark:text-white font-bold">{formatKRW(amount)}</span>
               </div>
               <div className="flex justify-between items-center mb-2">
                  <span className="text-primary text-sm">Bonus Charged ({bonusRate}%)</span>
                  <span className="text-primary font-bold">+{formatKRW(currentOption.bonus)}</span>
               </div>
-              <div className="flex justify-between items-center mt-4 pt-4 border-t border-white/10">
-                 <span className="text-white font-bold text-lg">Total Charge Value</span>
+              <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-200 dark:border-white/10">
+                 <span className="text-gray-900 dark:text-white font-bold text-lg">Total Charge Value</span>
                  <span className="text-3xl font-mono font-bold text-primary">{formatKRW(totalPoints)}</span>
               </div>
            </div>
@@ -212,7 +212,7 @@ export const VoucherPurchaseScreen: React.FC<VoucherPurchaseScreenProps> = ({ ev
       </div>
 
       {/* Checkout Bar */}
-      <div className="bg-[#1E1E24] border-t border-white/10 p-6 pb-10 safe-area-bottom z-30 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+      <div className="bg-white dark:bg-[#1E1E24] border-t border-gray-200 dark:border-white/10 p-6 pb-10 safe-area-bottom z-30 shadow-[0_-5px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_-10px_40px_rgba(0,0,0,0.5)] transition-colors">
         <button 
            onClick={handleInitialConfirm}
            className="w-full max-w-xl mx-auto h-14 rounded-2xl font-bold text-sm uppercase tracking-[0.1em] shadow-lg transition-all bg-lotte-red text-white hover:bg-red-700 active:scale-[0.98] flex items-center justify-center gap-2"
@@ -225,17 +225,17 @@ export const VoucherPurchaseScreen: React.FC<VoucherPurchaseScreenProps> = ({ ev
       {/* Gift Input Modal */}
       {showGiftModal && (
          <div className="fixed inset-0 z-50 flex items-center justify-center px-4 animate-fade-in">
-            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowGiftModal(false)}></div>
-            <div className="relative w-full max-w-sm bg-surface-card rounded-3xl border border-white/10 p-6 shadow-2xl animate-fade-in-up">
-               <h3 className="text-xl font-serif font-bold text-white mb-4">Recipient Details</h3>
+            <div className="absolute inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm" onClick={() => setShowGiftModal(false)}></div>
+            <div className="relative w-full max-w-sm bg-white dark:bg-surface-card rounded-3xl border border-gray-200 dark:border-white/10 p-6 shadow-2xl animate-fade-in-up">
+               <h3 className="text-xl font-serif font-bold text-gray-900 dark:text-white mb-4">Recipient Details</h3>
                <form onSubmit={handleGiftSubmit} className="space-y-4">
                   <div>
                      <label className="text-xs text-gray-500 uppercase font-bold mb-1 block">Name</label>
-                     <input required type="text" className="w-full h-12 bg-black/30 border border-white/10 rounded-xl px-4 text-white focus:border-primary focus:outline-none" placeholder="Friend's Name" />
+                     <input required type="text" className="w-full h-12 bg-gray-100 dark:bg-black/30 border border-transparent dark:border-white/10 rounded-xl px-4 text-gray-900 dark:text-white focus:border-primary focus:outline-none focus:bg-white dark:focus:bg-black/50 transition-colors" placeholder="Friend's Name" />
                   </div>
                   <div>
                      <label className="text-xs text-gray-500 uppercase font-bold mb-1 block">Phone Number</label>
-                     <input required type="tel" className="w-full h-12 bg-black/30 border border-white/10 rounded-xl px-4 text-white focus:border-primary focus:outline-none" placeholder="010-XXXX-XXXX" />
+                     <input required type="tel" className="w-full h-12 bg-gray-100 dark:bg-black/30 border border-transparent dark:border-white/10 rounded-xl px-4 text-gray-900 dark:text-white focus:border-primary focus:outline-none focus:bg-white dark:focus:bg-black/50 transition-colors" placeholder="010-XXXX-XXXX" />
                   </div>
                   <div className="pt-2">
                      <button type="submit" className="w-full h-12 bg-lotte-red text-white font-bold rounded-xl shadow-lg">Confirm Recipient</button>
@@ -249,22 +249,22 @@ export const VoucherPurchaseScreen: React.FC<VoucherPurchaseScreenProps> = ({ ev
       {showConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4 animate-fade-in">
           <div 
-            className="absolute inset-0 bg-black/90 backdrop-blur-md"
+            className="absolute inset-0 bg-black/80 dark:bg-black/90 backdrop-blur-md"
             onClick={() => !isProcessing && setShowConfirm(false)}
           ></div>
 
-          <div className="relative w-full max-w-sm bg-surface-card rounded-3xl border border-white/10 overflow-hidden shadow-2xl animate-fade-in-up">
+          <div className="relative w-full max-w-sm bg-white dark:bg-surface-card rounded-3xl border border-gray-200 dark:border-white/10 overflow-hidden shadow-2xl animate-fade-in-up">
             <div className="p-8 flex flex-col items-center">
-               <div className="size-16 rounded-full bg-lotte-red/20 flex items-center justify-center mb-4 text-lotte-red animate-pulse-slow">
+               <div className="size-16 rounded-full bg-lotte-red/10 dark:bg-lotte-red/20 flex items-center justify-center mb-4 text-lotte-red animate-pulse-slow">
                   <span className="material-symbols-outlined text-3xl">fingerprint</span>
                </div>
-               <h3 className="text-xl font-bold text-white mb-2">Authenticate Payment</h3>
-               <p className="text-gray-400 text-sm mb-6 text-center">Confirm purchase of {formatKRW(amount)} voucher.</p>
+               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Authenticate Payment</h3>
+               <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 text-center">Confirm purchase of {formatKRW(amount)} voucher.</p>
                
-               <div className="w-full bg-black/30 rounded-xl p-4 mb-6 border border-white/5">
+               <div className="w-full bg-gray-100 dark:bg-black/30 rounded-xl p-4 mb-6 border border-gray-200 dark:border-white/5">
                   <div className="flex justify-between text-sm mb-1">
                      <span className="text-gray-500">Method</span>
-                     <span className="text-white">L.PAY Card (88**)</span>
+                     <span className="text-gray-900 dark:text-white">L.PAY Card (88**)</span>
                   </div>
                   <div className="flex justify-between text-sm">
                      <span className="text-gray-500">Total</span>

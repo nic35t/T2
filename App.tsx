@@ -92,13 +92,13 @@ const AppContent: React.FC = () => {
           return <VoucherPurchaseScreen 
                    event={selectedData || EVENTS[0]} 
                    onNavigate={handleNavigate} 
-                   onBack={() => handleNavigate(AppScreen.EVENT_DETAILS, selectedData)} 
+                   onBack={handleBack} 
                  />;
         }
         return <BookingScreen 
                  event={selectedData || EVENTS[0]} 
                  onNavigate={handleNavigate} 
-                 onBack={() => handleNavigate(AppScreen.EVENT_DETAILS, selectedData)} 
+                 onBack={handleBack} 
                />;
       case AppScreen.BOOKING_SUCCESS:
         return <BookingSuccessScreen 
@@ -141,7 +141,7 @@ const AppContent: React.FC = () => {
   ].includes(currentScreen);
 
   return (
-    <div className="relative min-h-screen bg-[#0F0F12] text-white font-sans overflow-x-hidden">
+    <div className="relative min-h-screen bg-gray-50 dark:bg-[#0F0F12] text-gray-900 dark:text-white font-sans overflow-x-hidden transition-colors duration-300">
       <div className="mx-auto w-full min-h-screen relative">
         {renderScreen()}
       </div>

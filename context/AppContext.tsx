@@ -45,6 +45,9 @@ interface AppContextType {
   bookSeat: (eventId: string, seatId: string) => boolean;
   inquiries: InquiryData[];
   addInquiry: (subject: string, content: string) => void;
+  // Theme Logic
+  theme: 'dark' | 'light';
+  toggleTheme: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -99,6 +102,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return saved ? JSON.parse(saved) : [];
   });
 
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    const saved = localStorage.getItem('lticket_theme');
+    return (saved === 'light' || saved === 'dark') ? saved : 'dark';
+  });
+
   // --- Persistence Effects ---
 
   useEffect(() => localStorage.setItem('lticket_tickets', JSON.stringify(tickets)), [tickets]);
@@ -109,6 +117,14 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   useEffect(() => localStorage.setItem('lticket_notifications', JSON.stringify(notifications)), [notifications]);
   useEffect(() => localStorage.setItem('lticket_booked_seats', JSON.stringify(bookedSeats)), [bookedSeats]);
   useEffect(() => localStorage.setItem('lticket_inquiries', JSON.stringify(inquiries)), [inquiries]);
+
+  // Theme Effect
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove('light', 'dark');
+    root.classList.add(theme);
+    localStorage.setItem('lticket_theme', theme);
+  }, [theme]);
 
   // --- Actions ---
 
@@ -143,8 +159,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   
   const logout = () => {
     setIsLoggedIn(false);
-    // Optional: Clear local storage on logout? 
-    // For now, we keep data persistence as requested.
   };
 
   const toggleLike = (eventId: string) => {
@@ -161,6 +175,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const markAsRead = (id: string) => {
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+  };
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
 
   // --- Deep Logic Functions ---
@@ -209,7 +227,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       bookedSeats,
       bookSeat,
       inquiries,
-      addInquiry
+      addInquiry,
+      theme,
+      toggleTheme
     }}>
       {children}
     </AppContext.Provider>
