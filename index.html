@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <meta name="theme-color" content="#0F0F12" />
+    <meta name="theme-color" content="#FFFFFF" />
     <meta name="description" content="L.TICKET - Premium Cinematic Ticketing Experience" />
     <title>L.TICKET</title>
     <!-- Fonts -->
@@ -31,7 +30,9 @@
               'lotte-red': '#DA291C', // Lotte Red (Action/CTA)
               'primary-light': '#F3E5AB',
               'primary-dim': '#8C7323',
-              background: '#0F0F12', // Rich Black
+              background: '#0F0F12', // Rich Black (Dark Mode Bg)
+              'background-light': '#FFFFFF', // Pure White for Light Mode
+              'background-off-white': '#F4F5F7', // Premium Off-white
               'background-dark': '#050505',
               'surface-card': '#1E1E24', // Dark Gunmetal
               'surface-lighter': '#2C2C2E',
@@ -71,6 +72,8 @@
             boxShadow: {
               glow: '0 0 20px rgba(212, 175, 55, 0.3)',
               'wallet-active': '0 20px 50px -12px rgba(0, 0, 0, 0.7)',
+              'card-light': '0 10px 30px -10px rgba(0, 0, 0, 0.08)',
+              'card-hover': '0 20px 40px -12px rgba(0, 0, 0, 0.12)',
             },
           },
         },
@@ -78,11 +81,17 @@
     </script>
     <style>
       body {
-        background-color: #0F0F12;
-        color: white;
+        background-color: #F8F9FA; /* Premium Light Gray */
+        color: #111827; /* Dark Gray text */
         -webkit-font-smoothing: antialiased;
         overscroll-behavior-y: none;
       }
+      /* Dark mode override via class */
+      html.dark body {
+        background-color: #0F0F12;
+        color: white;
+      }
+      
       /* Hide Scrollbar */
       .no-scrollbar::-webkit-scrollbar {
         display: none;

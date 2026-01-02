@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { EVENTS, IMAGES } from '../constants';
 import { AppScreen, NavigationHandler, EventData } from '../types';
@@ -18,10 +17,9 @@ const sortLabels: Record<SortType, string> = {
   'most-reviews': 'Most Reviews'
 };
 
-// Helper function to make dates sortable
 const getSortableDate = (eventDate: string): Date => {
     if (eventDate.toLowerCase().includes('valid')) {
-        return new Date('2999-12-31'); // Vouchers go last
+        return new Date('2999-12-31');
     }
     if (eventDate === 'Tonight') {
         const today = new Date();
@@ -33,10 +31,9 @@ const getSortableDate = (eventDate: string): Date => {
     if (!isNaN(parsedDate.getTime())) {
         return parsedDate;
     }
-    return new Date('2998-12-31'); // Fallback for other formats
+    return new Date('2998-12-31');
 }
 
-// Helper for simulated review count
 const getReviewScore = (event: EventData) => (parseInt(event.id) * 37) % 100;
 
 export const CuratedScreen: React.FC<CuratedScreenProps> = ({ onNavigate }) => {
@@ -118,7 +115,7 @@ export const CuratedScreen: React.FC<CuratedScreenProps> = ({ onNavigate }) => {
   };
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col pb-28 bg-gray-50 dark:bg-background overflow-hidden transition-colors duration-300">
+    <div className="relative flex min-h-screen w-full flex-col pb-28 bg-[#F8F9FA] dark:bg-background overflow-hidden transition-colors duration-300">
       <div 
         className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none dark:opacity-[0.03] opacity-[0.015]"
         style={{ backgroundImage: `url('${IMAGES.texture}')`, backgroundSize: 'cover' }}
@@ -175,7 +172,7 @@ export const CuratedScreen: React.FC<CuratedScreenProps> = ({ onNavigate }) => {
             <div className="px-1 py-4 flex justify-between items-center">
               {/* Sort Dropdown */}
               <div ref={sortDropdownRef} className="relative z-20">
-                <button onClick={() => setIsSortOpen(!isSortOpen)} className="flex items-center gap-2 bg-white dark:bg-surface-card px-4 py-2 rounded-full border border-gray-200 dark:border-white/10 text-xs font-bold text-gray-600 dark:text-gray-300 hover:border-primary/50 hover:text-primary dark:hover:text-white transition-all shadow-sm">
+                <button onClick={() => setIsSortOpen(!isSortOpen)} className="flex items-center gap-2 bg-white dark:bg-surface-card px-4 py-2 rounded-full border border-gray-200 dark:border-white/10 text-xs font-bold text-gray-700 dark:text-gray-300 hover:border-primary/50 hover:text-primary dark:hover:text-white transition-all shadow-sm">
                   <span className="material-symbols-outlined text-[18px] text-primary/80">sort</span>
                   <span>{sortLabels[sortBy]}</span>
                   <span className={`material-symbols-outlined text-[18px] text-gray-400 transition-transform duration-300 ${isSortOpen ? 'rotate-180' : ''}`}>expand_more</span>
@@ -247,7 +244,7 @@ export const CuratedScreen: React.FC<CuratedScreenProps> = ({ onNavigate }) => {
               
               if (layout === 'list') {
                 return (
-                  <article key={event.id} onClick={() => onNavigate?.(AppScreen.EVENT_DETAILS, event)} className="animate-fade-in-up w-full bg-white dark:bg-surface-card rounded-2xl border border-gray-100 dark:border-white/5 flex overflow-hidden group active:scale-[0.99] transition-all duration-300 hover:border-primary/40 cursor-pointer shadow-sm hover:shadow-lg" style={{ animationDelay: `${index * 0.05}s` }}>
+                  <article key={event.id} onClick={() => onNavigate?.(AppScreen.EVENT_DETAILS, event)} className="animate-fade-in-up w-full bg-white dark:bg-surface-card rounded-2xl border border-gray-100 dark:border-white/5 flex overflow-hidden group active:scale-[0.99] transition-all duration-300 hover:border-primary/40 cursor-pointer shadow-card-light hover:shadow-card-hover dark:shadow-sm" style={{ animationDelay: `${index * 0.05}s` }}>
                     <div className="w-32 md:w-40 shrink-0 relative overflow-hidden">
                       <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style={{ backgroundImage: `url('${event.image}')` }}></div>
                       <div className="absolute inset-0 bg-black/5 dark:bg-black/20 group-hover:bg-transparent transition-colors"></div>
@@ -270,7 +267,7 @@ export const CuratedScreen: React.FC<CuratedScreenProps> = ({ onNavigate }) => {
                          {event.location}
                       </p>
                       
-                      {/* Description Snippet (Visible on larger screens or short descriptions) */}
+                      {/* Description Snippet */}
                       {event.description && (
                         <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-3 hidden sm:block font-light leading-relaxed">
                           {event.description}
@@ -302,9 +299,51 @@ export const CuratedScreen: React.FC<CuratedScreenProps> = ({ onNavigate }) => {
               // Grid View
               return (
                 <article key={event.id} onClick={() => onNavigate?.(AppScreen.EVENT_DETAILS, event)} className="animate-fade-in-up cursor-pointer group" style={{ animationDelay: `${index * 0.1}s` }}>
-                   <div className="relative w-full h-full bg-white dark:bg-surface-card rounded-[32px] overflow-hidden shadow-xl border border-gray-100 dark:border-white/10 flex flex-col group active:scale-[0.98] transition-all duration-300 hover:border-primary/40">
-                      <div className="h-[72px] px-6 flex items-center justify-between bg-gray-50 dark:bg-white/[0.02] border-b border-gray-100 dark:border-white/5 relative z-20"><div className="flex flex-col justify-center gap-0.5"><span className={`text-[10px] font-bold tracking-widest uppercase ${event.category === 'voucher' ? 'text-blue-500 dark:text-blue-400' : 'text-primary'}`}>{event.category === 'voucher' ? 'Premium Gift' : `${event.date} • ${event.time}`}</span><h2 className="text-lg font-bold text-gray-900 dark:text-white tracking-tight truncate max-w-[200px] font-serif">{event.title}</h2></div><button onClick={(e) => { e.stopPropagation(); toggleLike(event.id);}} className={`size-10 rounded-full flex items-center justify-center border transition-all duration-300 ${isLiked ? 'bg-primary text-black border-primary' : 'bg-white dark:bg-white/5 border-gray-200 dark:border-white/5 text-gray-400 dark:text-white/80 hover:bg-gray-50 dark:hover:bg-white/10'}`}><span className={`material-symbols-outlined text-[20px] ${isLiked ? 'font-filled' : ''}`}>{isLiked ? 'check' : 'add'}</span></button></div>
-                      <div className="relative flex flex-col flex-1"><div className="relative aspect-[16/10] w-full overflow-hidden"><div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style={{ backgroundImage: `url('${event.image}')` }}></div>{event.category === 'voucher' && <div className="absolute inset-0 bg-black/20"></div>}<div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-black/10 dark:from-surface-card dark:via-transparent dark:to-black/30 opacity-60"></div>{statusConfig && ( <div className={`absolute top-4 right-4 px-3 py-1.5 rounded-full backdrop-blur-md text-[10px] font-bold uppercase tracking-wider border border-white/10 ${statusConfig.className}`}>{statusConfig.label}</div> )}<div className="absolute bottom-4 left-4 right-4 flex justify-between items-end"><div className="flex items-center gap-1.5 bg-white/80 dark:bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/20 dark:border-white/10 shadow-sm"><span className="material-symbols-outlined text-sm text-primary">location_on</span><span className="text-xs font-bold text-gray-900 dark:text-white">{event.location}</span></div></div></div><div className="p-6 flex flex-col flex-1 bg-white dark:bg-surface-card"><div className="flex justify-between items-start mb-4"><div className="flex items-center gap-2 flex-wrap">{event.tags.map(tag => ( <span key={tag} className={`px-2.5 py-1 rounded border text-[10px] font-bold uppercase transition-colors ${selectedTag === tag ? 'bg-primary/10 dark:bg-primary/20 border-primary text-primary' : 'border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 text-gray-500 dark:text-gray-300'}`}>{tag}</span> ))}</div><button onClick={(e) => { e.stopPropagation(); toggleLike(event.id);}} className={`material-symbols-outlined transition-colors cursor-pointer text-[22px] ${isLiked ? 'text-red-500' : 'text-gray-300 dark:text-gray-500 hover:text-red-400'}`} style={{ fontVariationSettings: isLiked ? "'FILL' 1" : "'FILL' 0" }}>favorite</button></div>{event.description && (<p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6 line-clamp-3 font-light">{event.description}</p>)}<div className="mt-auto pt-5 border-t border-dashed border-gray-200 dark:border-white/10"><div className="flex items-center justify-between"><div className="flex flex-col"><p className="text-[9px] text-gray-500 uppercase font-bold tracking-wider mb-0.5">Price</p><div className="flex items-baseline gap-2"><p className="text-xl font-bold text-gray-900 dark:text-white">{formatKRW(event.price)}</p></div></div><button onClick={(e) => { e.stopPropagation(); onNavigate?.(AppScreen.BOOKING, event);}} className="h-11 px-6 rounded-full bg-gray-900 dark:bg-white/10 backdrop-blur-md border border-transparent dark:border-white/20 text-white text-[11px] font-bold hover:bg-black dark:hover:bg-white/20 transition-all tracking-wider uppercase shadow-lg flex items-center gap-2"><span>{event.category === 'voucher' ? 'Buy Gift' : 'Book Now'}</span><span className="material-symbols-outlined text-[16px]">arrow_forward</span></button></div></div></div></div>
+                   <div className="relative w-full h-full bg-white dark:bg-surface-card rounded-[32px] overflow-hidden shadow-card-light hover:shadow-card-hover dark:shadow-xl border border-gray-100 dark:border-white/10 flex flex-col group active:scale-[0.98] transition-all duration-300 hover:border-primary/40">
+                      <div className="h-[72px] px-6 flex items-center justify-between bg-white dark:bg-white/[0.02] border-b border-gray-100 dark:border-white/5 relative z-20">
+                         <div className="flex flex-col justify-center gap-0.5">
+                            <span className={`text-[10px] font-bold tracking-widest uppercase ${event.category === 'voucher' ? 'text-blue-500 dark:text-blue-400' : 'text-primary'}`}>{event.category === 'voucher' ? 'Premium Gift' : `${event.date} • ${event.time}`}</span>
+                            <h2 className="text-lg font-bold text-gray-900 dark:text-white tracking-tight truncate max-w-[200px] font-serif">{event.title}</h2>
+                         </div>
+                         <button onClick={(e) => { e.stopPropagation(); toggleLike(event.id);}} className={`size-10 rounded-full flex items-center justify-center border transition-all duration-300 ${isLiked ? 'bg-primary text-black border-primary' : 'bg-gray-100 dark:bg-white/5 border-gray-200 dark:border-white/5 text-gray-400 dark:text-white/80 hover:bg-gray-50 dark:hover:bg-white/10'}`}>
+                            <span className={`material-symbols-outlined text-[20px] ${isLiked ? 'font-filled' : ''}`}>{isLiked ? 'check' : 'add'}</span>
+                         </button>
+                      </div>
+                      <div className="relative flex flex-col flex-1">
+                         <div className="relative aspect-[16/10] w-full overflow-hidden">
+                            <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style={{ backgroundImage: `url('${event.image}')` }}></div>
+                            {event.category === 'voucher' && <div className="absolute inset-0 bg-black/20"></div>}
+                            <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-black/10 dark:from-surface-card dark:via-transparent dark:to-black/30 opacity-60"></div>
+                            {statusConfig && ( <div className={`absolute top-4 right-4 px-3 py-1.5 rounded-full backdrop-blur-md text-[10px] font-bold uppercase tracking-wider border border-white/10 ${statusConfig.className}`}>{statusConfig.label}</div> )}
+                            <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+                               <div className="flex items-center gap-1.5 bg-white/80 dark:bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/20 dark:border-white/10 shadow-sm">
+                                  <span className="material-symbols-outlined text-sm text-primary">location_on</span>
+                                  <span className="text-xs font-bold text-gray-900 dark:text-white">{event.location}</span>
+                               </div>
+                            </div>
+                         </div>
+                         <div className="p-6 flex flex-col flex-1 bg-white dark:bg-surface-card">
+                            <div className="flex justify-between items-start mb-4">
+                               <div className="flex items-center gap-2 flex-wrap">
+                                  {event.tags.map(tag => ( <span key={tag} className={`px-2.5 py-1 rounded border text-[10px] font-bold uppercase transition-colors ${selectedTag === tag ? 'bg-primary/10 dark:bg-primary/20 border-primary text-primary' : 'border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 text-gray-500 dark:text-gray-300'}`}>{tag}</span> ))}
+                               </div>
+                               <button onClick={(e) => { e.stopPropagation(); toggleLike(event.id);}} className={`material-symbols-outlined transition-colors cursor-pointer text-[22px] ${isLiked ? 'text-red-500' : 'text-gray-300 dark:text-gray-500 hover:text-red-400'}`} style={{ fontVariationSettings: isLiked ? "'FILL' 1" : "'FILL' 0" }}>favorite</button>
+                            </div>
+                            {event.description && (<p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6 line-clamp-3 font-light">{event.description}</p>)}
+                            <div className="mt-auto pt-5 border-t border-dashed border-gray-200 dark:border-white/10">
+                               <div className="flex items-center justify-between">
+                                  <div className="flex flex-col">
+                                     <p className="text-[9px] text-gray-500 uppercase font-bold tracking-wider mb-0.5">Price</p>
+                                     <div className="flex items-baseline gap-2"><p className="text-xl font-bold text-gray-900 dark:text-white">{formatKRW(event.price)}</p></div>
+                                  </div>
+                                  <button onClick={(e) => { e.stopPropagation(); onNavigate?.(AppScreen.BOOKING, event);}} className="h-11 px-6 rounded-full bg-gray-900 dark:bg-white/10 backdrop-blur-md border border-transparent dark:border-white/20 text-white text-[11px] font-bold hover:bg-black dark:hover:bg-white/20 transition-all tracking-wider uppercase shadow-lg flex items-center gap-2">
+                                     <span>{event.category === 'voucher' ? 'Buy Gift' : 'Book Now'}</span>
+                                     <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                                  </button>
+                               </div>
+                            </div>
+                         </div>
+                      </div>
                    </div>
                 </article>
               );

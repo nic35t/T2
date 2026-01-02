@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { TicketData } from '../types';
 import { MY_TICKETS } from '../constants';
@@ -104,7 +103,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     const saved = localStorage.getItem('lticket_theme');
-    return (saved === 'light' || saved === 'dark') ? saved : 'dark';
+    // Force default to light if not explicitly set to dark
+    return saved === 'dark' ? 'dark' : 'light';
   });
 
   // --- Persistence Effects ---

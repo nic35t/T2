@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { IMAGES, EVENTS } from '../constants';
 import { AppScreen, NavigationHandler, EventData } from '../types';
@@ -67,7 +66,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
             onClick={() => onNavigate?.(AppScreen.EVENT_DETAILS, evt)}
             className="min-w-[160px] w-[160px] group cursor-pointer"
           >
-            <div className="h-[220px] rounded-xl overflow-hidden mb-3 relative border border-gray-200 dark:border-white/5 shadow-md dark:shadow-lg group-hover:border-primary/50 transition-colors bg-gray-100 dark:bg-surface-card">
+            <div className="h-[220px] rounded-xl overflow-hidden mb-3 relative border border-gray-100 dark:border-white/5 shadow-card-light dark:shadow-lg group-hover:shadow-card-hover transition-all duration-300 bg-white dark:bg-surface-card">
                <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style={{ backgroundImage: `url('${evt.image}')` }}></div>
                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
                <span className="absolute bottom-3 left-3 text-[10px] font-bold text-white bg-black/50 backdrop-blur-md px-2 py-1 rounded border border-white/10">
@@ -85,7 +84,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
   // Ad Banner Component
   const AdBanner = () => (
     <div className="px-6 mb-10">
-      <div className="relative w-full h-28 md:h-32 rounded-2xl overflow-hidden shadow-lg group cursor-pointer border border-gray-200 dark:border-white/5">
+      <div className="relative w-full h-28 md:h-32 rounded-2xl overflow-hidden shadow-card-light dark:shadow-lg hover:shadow-card-hover transition-all duration-300 group cursor-pointer border border-gray-100 dark:border-white/5">
         <div 
           className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
           style={{ backgroundImage: `url('${IMAGES.ad_banner}')` }}
@@ -106,12 +105,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
   );
 
   return (
-    <div className="relative w-full min-h-screen flex flex-col bg-gray-50 dark:bg-[#0F0F12] overflow-x-hidden pb-24 transition-colors duration-300">
+    <div className="relative w-full min-h-screen flex flex-col bg-[#F8F9FA] dark:bg-[#0F0F12] overflow-x-hidden pb-24 transition-colors duration-300">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 flex h-auto min-h-[96px] items-center justify-between px-6 pt-[env(safe-area-inset-top,24px)] bg-gradient-to-b from-black/60 to-transparent pointer-events-none pb-4 transition-all">
         <div className="max-w-7xl mx-auto w-full flex items-center justify-between pointer-events-auto">
-          {/* Menu button removed as per user feedback since it had no function. 
-              Added a spacer div to maintain centered layout for the Logo. */}
           <div className="flex size-10"></div>
           
           <div className="flex items-center justify-center">
@@ -142,11 +139,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
                 className={`absolute inset-0 w-full h-full bg-cover bg-center transition-transform duration-[8000ms] ease-linear ${index === activeIndex ? 'scale-110' : 'scale-100'}`}
                 style={{ backgroundImage: `url('${event.image}')` }}
              >
-                {/* Vignette - Adjusted for Light/Dark Mode transition at bottom */}
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_rgba(0,0,0,0.4)_100%)]"></div>
              </div>
-             {/* Gradient to blend with background: Fades to gray-50 in light mode, #0F0F12 in dark mode */}
-             <div className="absolute inset-0 bg-gradient-to-t from-gray-50 via-gray-50/20 to-transparent dark:from-[#0F0F12] dark:via-[#0F0F12]/40 dark:to-transparent"></div>
+             {/* Gradient blends to F8F9FA in light mode */}
+             <div className="absolute inset-0 bg-gradient-to-t from-[#F8F9FA] via-[#F8F9FA]/20 to-transparent dark:from-[#0F0F12] dark:via-[#0F0F12]/40 dark:to-transparent"></div>
           </div>
         ))}
 
@@ -160,12 +156,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
                 </span>
               </div>
               
-              {/* Text shadow added for better visibility on light images if any, though images are darkened */}
               <h1 className="font-serif text-5xl md:text-7xl font-bold text-white mb-4 drop-shadow-2xl leading-[0.9] max-w-lg">
                 {currentEvent.title}
               </h1>
               
-              {/* Countdown Bar */}
               {!isVoucher && (
                  <div className="flex items-center gap-4 mb-8 bg-black/40 backdrop-blur-md border border-white/10 rounded-full px-4 py-2 w-fit">
                     <span className="text-[10px] text-gray-300 uppercase tracking-widest font-bold">Ticket Closing</span>
@@ -199,10 +193,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
       {/* Curated Sections */}
       <div className="relative z-30 -mt-10">
          <Section title="Exclusive" events={EVENTS.filter(e => e.category === 'performance')} />
-         
-         {/* Native Ad Placement: Placed between sections for natural flow */}
          <AdBanner />
-         
          <Section title="Premium Gifts" events={EVENTS.filter(e => e.category === 'voucher')} />
          <Section title="Critics' Choice" events={[EVENTS[0], EVENTS[3], EVENTS[4]].filter(Boolean)} />
          
