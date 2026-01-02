@@ -31,6 +31,9 @@ export interface TicketData {
   type: string;
   qrCode?: string;
   count?: number;
+  // New fields for gifting history
+  isGift?: boolean;
+  recipientName?: string;
 }
 
 export interface ReviewData {

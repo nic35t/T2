@@ -19,6 +19,8 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
   const [isGift, setIsGift] = useState(false);
   const [showGiftModal, setShowGiftModal] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [recipientName, setRecipientName] = useState(''); // Store recipient name
+  const [recipientPhone, setRecipientPhone] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Load taken seats from context for this specific event
@@ -110,7 +112,7 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
 
     // Simulate API Call
     setTimeout(() => {
-      // 1. Lock the seat in the "Backend" (Context) - Even if gifted, seat is taken
+      // 1. Lock the seat in the "Backend" (Context)
       const success = bookSeat(event.id, selectedSeat);
       
       if (!success) {
@@ -119,29 +121,33 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
           return;
       }
 
-      if (!isGift) {
-        // 2a. Create the ticket for self
-        const newTicket: TicketData = {
-          id: `t-${Date.now()}`,
-          eventId: event.id,
-          category: 'performance',
-          title: event.title,
-          location: event.location,
-          date: event.date === 'Tonight' ? '2023. 10. 25' : event.date,
-          fullDate: event.date === 'Tonight' ? '2023. 10. 25 (Wed)' : `2023. ${event.date} (Sat)`,
-          time: event.time || '19:30',
-          seats: `Row ${row} · Seat ${selectedSeat.charAt(1)}`,
-          image: event.image,
-          status: 'upcoming',
-          type: `${grade} Seat`
-        };
-        addTicket(newTicket);
-      } else {
-        // 2b. Gift Logic: Don't add to wallet, just notify
+      // 2. Create the ticket object (for both self and gift)
+      const newTicket: TicketData = {
+        id: `t-${Date.now()}`,
+        eventId: event.id,
+        category: 'performance',
+        title: event.title,
+        location: event.location,
+        date: event.date === 'Tonight' ? '2023. 10. 25' : event.date,
+        fullDate: event.date === 'Tonight' ? '2023. 10. 25 (Wed)' : `2023. ${event.date} (Sat)`,
+        time: event.time || '19:30',
+        seats: `Row ${row} · Seat ${selectedSeat.charAt(1)}`,
+        image: event.image,
+        status: 'upcoming', // Gift is technically 'upcoming' until used, but we filter by isGift
+        type: `${grade} Seat`,
+        isGift: isGift,
+        recipientName: isGift ? recipientName : undefined
+      };
+
+      // 3. Save to wallet (History)
+      addTicket(newTicket);
+
+      // 4. Notifications
+      if (isGift) {
         addNotification({
             id: `gift-${Date.now()}`,
             title: 'Ticket Gift Sent',
-            message: `You sent a ticket for ${event.title} (Seat ${selectedSeat}) to your friend.`,
+            message: `You sent a ticket for ${event.title} to ${recipientName}.`,
             time: 'Just now',
             read: false,
             type: 'success'
@@ -396,11 +402,25 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
                <form onSubmit={handleGiftSubmit} className="space-y-4">
                   <div>
                      <label className="text-xs text-gray-500 uppercase font-bold mb-1 block">Recipient Name</label>
-                     <input required type="text" className="w-full h-12 bg-gray-100 dark:bg-black/30 border border-transparent dark:border-white/10 rounded-xl px-4 text-gray-900 dark:text-white focus:border-primary focus:outline-none focus:bg-white dark:focus:bg-black/50 transition-colors" placeholder="Friend's Name" />
+                     <input 
+                        required 
+                        type="text" 
+                        value={recipientName}
+                        onChange={(e) => setRecipientName(e.target.value)}
+                        className="w-full h-12 bg-gray-100 dark:bg-black/30 border border-transparent dark:border-white/10 rounded-xl px-4 text-gray-900 dark:text-white focus:border-primary focus:outline-none focus:bg-white dark:focus:bg-black/50 transition-colors" 
+                        placeholder="Friend's Name" 
+                     />
                   </div>
                   <div>
                      <label className="text-xs text-gray-500 uppercase font-bold mb-1 block">Mobile Number</label>
-                     <input required type="tel" className="w-full h-12 bg-gray-100 dark:bg-black/30 border border-transparent dark:border-white/10 rounded-xl px-4 text-gray-900 dark:text-white focus:border-primary focus:outline-none focus:bg-white dark:focus:bg-black/50 transition-colors" placeholder="010-XXXX-XXXX" />
+                     <input 
+                        required 
+                        type="tel" 
+                        value={recipientPhone}
+                        onChange={(e) => setRecipientPhone(e.target.value)}
+                        className="w-full h-12 bg-gray-100 dark:bg-black/30 border border-transparent dark:border-white/10 rounded-xl px-4 text-gray-900 dark:text-white focus:border-primary focus:outline-none focus:bg-white dark:focus:bg-black/50 transition-colors" 
+                        placeholder="010-XXXX-XXXX" 
+                     />
                   </div>
                   <div className="pt-2">
                      <button type="submit" className="w-full h-12 bg-lotte-red text-white font-bold rounded-xl shadow-lg hover:bg-red-700 transition-colors">Confirm Recipient</button>
@@ -431,6 +451,12 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
                      <span className="text-gray-500">Seat</span>
                      <span className="text-gray-900 dark:text-white font-bold">{selectedSeat} ({getSeatInfo(selectedSeat!.charAt(0)).grade})</span>
                   </div>
+                  {isGift && (
+                     <div className="flex justify-between text-sm mb-1">
+                        <span className="text-gray-500">Recipient</span>
+                        <span className="text-gray-900 dark:text-white font-bold">{recipientName}</span>
+                     </div>
+                  )}
                   <div className="flex justify-between text-sm">
                      <span className="text-gray-500">Total</span>
                      <span className="text-lotte-red font-bold">{formatKRW(finalPrice)}</span>

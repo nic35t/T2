@@ -16,6 +16,10 @@ export const VoucherPurchaseScreen: React.FC<VoucherPurchaseScreenProps> = ({ ev
   const [showGiftModal, setShowGiftModal] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   
+  // Gift details
+  const [recipientName, setRecipientName] = useState('');
+  const [recipientPhone, setRecipientPhone] = useState('');
+  
   // Toast State
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -62,31 +66,33 @@ export const VoucherPurchaseScreen: React.FC<VoucherPurchaseScreenProps> = ({ ev
     setIsProcessing(true);
     
     setTimeout(() => {
-      // Logic for Voucher Purchase
+      // 1. Create Ticket object (works for both self and gift to track history)
+      const newVoucher: TicketData = {
+        id: `v-${Date.now()}`,
+        eventId: event.id,
+        category: 'voucher',
+        title: event.title,
+        location: 'All Branches',
+        fullDate: `Valid until 2029.12.31`,
+        balance: totalPoints,
+        image: event.image,
+        status: 'active',
+        type: 'Digital Voucher',
+        isGift: isGift,
+        recipientName: isGift ? recipientName : undefined
+      };
       
+      addTicket(newVoucher);
+
       if (!isGift) {
-         // Case 1: Buying for Self
-         const newVoucher: TicketData = {
-           id: `v-${Date.now()}`,
-           eventId: event.id,
-           category: 'voucher',
-           title: event.title,
-           location: 'All Branches',
-           fullDate: `Valid until 2029.12.31`,
-           balance: totalPoints,
-           image: event.image,
-           status: 'active',
-           type: 'Digital Voucher'
-         };
-         
-         addTicket(newVoucher);
+         // Case 1: Buying for Self - Charge balance
          chargeBalance(totalPoints);
       } else {
-         // Case 2: Gifting (Logic Change: Do NOT add to wallet, just simulate send)
+         // Case 2: Gifting - Just notify
          addNotification({
             id: `gift-${Date.now()}`,
             title: 'Gift Sent',
-            message: `You sent a ${formatKRW(totalPoints)} voucher to your friend.`,
+            message: `You sent a ${formatKRW(totalPoints)} voucher to ${recipientName}.`,
             time: 'Just now',
             read: false,
             type: 'success'
@@ -231,11 +237,25 @@ export const VoucherPurchaseScreen: React.FC<VoucherPurchaseScreenProps> = ({ ev
                <form onSubmit={handleGiftSubmit} className="space-y-4">
                   <div>
                      <label className="text-xs text-gray-500 uppercase font-bold mb-1 block">Name</label>
-                     <input required type="text" className="w-full h-12 bg-gray-100 dark:bg-black/30 border border-transparent dark:border-white/10 rounded-xl px-4 text-gray-900 dark:text-white focus:border-primary focus:outline-none focus:bg-white dark:focus:bg-black/50 transition-colors" placeholder="Friend's Name" />
+                     <input 
+                        required 
+                        type="text" 
+                        value={recipientName}
+                        onChange={(e) => setRecipientName(e.target.value)}
+                        className="w-full h-12 bg-gray-100 dark:bg-black/30 border border-transparent dark:border-white/10 rounded-xl px-4 text-gray-900 dark:text-white focus:border-primary focus:outline-none focus:bg-white dark:focus:bg-black/50 transition-colors" 
+                        placeholder="Friend's Name" 
+                    />
                   </div>
                   <div>
                      <label className="text-xs text-gray-500 uppercase font-bold mb-1 block">Phone Number</label>
-                     <input required type="tel" className="w-full h-12 bg-gray-100 dark:bg-black/30 border border-transparent dark:border-white/10 rounded-xl px-4 text-gray-900 dark:text-white focus:border-primary focus:outline-none focus:bg-white dark:focus:bg-black/50 transition-colors" placeholder="010-XXXX-XXXX" />
+                     <input 
+                        required 
+                        type="tel" 
+                        value={recipientPhone}
+                        onChange={(e) => setRecipientPhone(e.target.value)}
+                        className="w-full h-12 bg-gray-100 dark:bg-black/30 border border-transparent dark:border-white/10 rounded-xl px-4 text-gray-900 dark:text-white focus:border-primary focus:outline-none focus:bg-white dark:focus:bg-black/50 transition-colors" 
+                        placeholder="010-XXXX-XXXX" 
+                     />
                   </div>
                   <div className="pt-2">
                      <button type="submit" className="w-full h-12 bg-lotte-red text-white font-bold rounded-xl shadow-lg">Confirm Recipient</button>
@@ -266,6 +286,12 @@ export const VoucherPurchaseScreen: React.FC<VoucherPurchaseScreenProps> = ({ ev
                      <span className="text-gray-500">Method</span>
                      <span className="text-gray-900 dark:text-white">L.PAY Card (88**)</span>
                   </div>
+                  {isGift && (
+                     <div className="flex justify-between text-sm mb-1">
+                        <span className="text-gray-500">Recipient</span>
+                        <span className="text-gray-900 dark:text-white font-bold">{recipientName}</span>
+                     </div>
+                  )}
                   <div className="flex justify-between text-sm">
                      <span className="text-gray-500">Total</span>
                      <span className="text-lotte-red font-bold">{formatKRW(amount)}</span>
