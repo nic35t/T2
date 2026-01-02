@@ -257,42 +257,60 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
           {/* --- Selection Details Card --- */}
           {selectedSeat && (
             <div className="px-6 md:px-8 animate-fade-in-up pb-32">
-              <div className="bg-white dark:bg-surface-card border border-gray-200 dark:border-white/10 rounded-2xl p-6 shadow-lg max-w-md mx-auto transition-colors">
+              <div className="bg-white dark:bg-surface-card border border-gray-200 dark:border-white/10 rounded-2xl shadow-xl max-w-md mx-auto transition-colors overflow-hidden relative">
+                 {/* Decorative Top Border */}
+                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
+
                 {(() => { // IIFE to calculate seatInfo once
                   const seatInfo = getSeatInfo(selectedSeat.charAt(0));
                   const gradeTextColor = seatInfo.grade === 'VIP' ? 'text-primary' : seatInfo.grade === 'R' ? 'text-gray-800 dark:text-white' : 'text-gray-500 dark:text-gray-400';
                   
                   return (
                     <>
-                      <div className="flex items-center justify-between pb-4 border-b border-gray-100 dark:border-white/10">
-                        <h3 className="font-serif font-bold text-lg text-gray-900 dark:text-white">Selection Details</h3>
-                        <div className="flex items-center gap-2">
-                          <span className={`px-2 py-0.5 rounded text-xs font-bold ${seatInfo.color} bg-opacity-20 ${gradeTextColor} border ${seatInfo.borderColor} border-opacity-50`}>
-                            {seatInfo.grade}
+                      {/* Header */}
+                      <div className="p-6 border-b border-gray-100 dark:border-white/5 bg-white dark:bg-surface-card">
+                        <div className="flex items-center justify-between mb-1">
+                          <h3 className="font-serif font-bold text-lg text-gray-900 dark:text-white">Seat Selection</h3>
+                          <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${seatInfo.color} bg-opacity-10 ${gradeTextColor} border ${seatInfo.borderColor} border-opacity-30`}>
+                            {seatInfo.grade} Class
                           </span>
-                          <span className="font-mono font-bold text-lg text-primary">{selectedSeat}</span>
+                        </div>
+                        <div className="flex items-baseline gap-3">
+                           <span className="text-4xl font-mono font-bold text-gray-900 dark:text-white tracking-tighter">{selectedSeat}</span>
+                           <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">Row {selectedSeat.charAt(0)}</span>
                         </div>
                       </div>
-                      <div className="space-y-3 pt-4">
+
+                      {/* Pricing */}
+                      <div className="p-6 bg-gray-50 dark:bg-black/20 space-y-3">
                         <div className="flex justify-between items-center text-sm">
-                          <span className="text-gray-500 dark:text-gray-400">Original Price</span>
-                          <span className="font-mono text-gray-400 dark:text-gray-500 line-through">{formatKRW(originalPrice)}</span>
+                          <span className="text-gray-500 dark:text-gray-400 font-medium">Original Price</span>
+                          <span className="font-mono text-gray-400 dark:text-gray-500 line-through decoration-gray-400/50 decoration-1">{formatKRW(originalPrice)}</span>
                         </div>
+                        
                         <div className="flex justify-between items-center text-sm">
-                          <span className="text-gray-500 dark:text-gray-400">Member Discount</span>
+                          <span className="text-gray-700 dark:text-gray-300 font-medium flex items-center gap-1.5">
+                            <span className="material-symbols-outlined text-base text-lotte-red">loyalty</span>
+                            Membership Benefit
+                          </span>
                           <span className="font-mono text-lotte-red font-bold">-{formatKRW(originalPrice - finalPrice)}</span>
                         </div>
-                        <div className="flex justify-between items-center pt-3 mt-2 border-t border-gray-100 dark:border-white/5">
-                          <span className="text-base font-bold text-gray-900 dark:text-white">Final Price</span>
-                          <span className="font-mono font-bold text-2xl text-gray-900 dark:text-white">{formatKRW(finalPrice)}</span>
+
+                        <div className="h-px bg-gray-200 dark:bg-white/10 my-2"></div>
+
+                        <div className="flex justify-between items-center">
+                          <span className="text-base font-bold text-gray-900 dark:text-white uppercase tracking-tight">Final Payment</span>
+                          <span className="font-mono font-bold text-2xl text-gray-900 dark:text-white tracking-tight">{formatKRW(finalPrice)}</span>
                         </div>
-                        <div className="flex justify-between items-center text-sm pt-3 mt-2 border-t border-dashed border-gray-200 dark:border-white/10">
-                          <div className="flex items-center gap-2 text-primary">
-                            <span className="material-symbols-outlined text-base">monetization_on</span>
-                            <span>L-Point Earning</span>
-                          </div>
-                          <span className="font-mono font-bold text-primary">+{points.toLocaleString()} P</span>
-                        </div>
+                      </div>
+
+                      {/* Benefits */}
+                      <div className="px-6 py-4 bg-gradient-to-r from-[#F3E5AB]/20 to-primary/10 dark:from-primary/5 dark:to-primary/10 border-t border-primary/10 flex justify-between items-center">
+                         <div className="flex items-center gap-2 text-primary-dim dark:text-primary">
+                            <span className="material-symbols-outlined text-xl">stars</span>
+                            <span className="text-xs font-bold uppercase tracking-wider">L-Point Accumulation</span>
+                         </div>
+                         <span className="font-mono font-bold text-lg text-primary-dim dark:text-primary">+{points.toLocaleString()} P</span>
                       </div>
                     </>
                   );

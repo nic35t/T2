@@ -198,7 +198,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
 
       {/* Curated Sections */}
       <div className="relative z-30 -mt-10">
-         <Section title="Date Course (Gangnam)" events={EVENTS.filter(e => e.category === 'performance')} />
+         <Section title="Exclusive" events={EVENTS.filter(e => e.category === 'performance')} />
          
          {/* Native Ad Placement: Placed between sections for natural flow */}
          <AdBanner />
