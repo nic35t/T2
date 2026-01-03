@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { TicketData } from '../types';
-import { MY_TICKETS } from '../constants';
+import { TicketData, ReviewData, CouponData } from '../types';
+import { MY_TICKETS, IMAGES } from '../constants';
 
 interface NotificationItem {
   id: string;
@@ -24,7 +24,7 @@ export interface InquiryData {
 interface AppContextType {
   tickets: TicketData[];
   addTicket: (ticket: TicketData) => void;
-  cancelTicket: (ticketId: string) => void; // Added
+  cancelTicket: (ticketId: string) => void;
   isLoggedIn: boolean;
   login: () => void;
   logout: () => void;
@@ -49,6 +49,9 @@ interface AppContextType {
   // Theme Logic
   theme: 'dark' | 'light';
   toggleTheme: () => void;
+  // Reviews & Coupons
+  myReviews: ReviewData[];
+  coupons: CouponData[];
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -91,7 +94,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const [bookedSeats, setBookedSeats] = useState<Record<string, string[]>>(() => {
     const saved = localStorage.getItem('lticket_booked_seats');
-    // Pre-fill some seats for realism
     const defaultSeats: Record<string, string[]> = {
       '1': ['B4', 'C5', 'D2'], // Phantom
     };
@@ -107,6 +109,35 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const saved = localStorage.getItem('lticket_theme');
     return saved === 'dark' ? 'dark' : 'light';
   });
+
+  // Mock Data for Reviews and Coupons (Not persisted for prototype simplicity)
+  const [myReviews] = useState<ReviewData[]>([
+    { 
+      id: 'mr1', eventId: '1', eventTitle: 'The Phantom of the Opera', eventImage: IMAGES.phantom, 
+      userId: 'me', userName: 'Alex Thespian', rating: 5, date: '2023.10.25', 
+      content: 'The stage production was magnificent. The falling chandelier scene gave me chills!', likes: 24 
+    },
+    { 
+      id: 'mr2', eventId: '2', eventTitle: 'Chicago', eventImage: IMAGES.chicago, 
+      userId: 'me', userName: 'Alex Thespian', rating: 4, date: '2023.09.15', 
+      content: 'Great jazz numbers, but the seating view was slightly obstructed. Still a must-watch.', likes: 10 
+    }
+  ]);
+
+  const [coupons] = useState<CouponData[]>([
+    { 
+      id: 'c1', title: 'New Member Welcome', description: '10% off for your first booking', 
+      amount: 10, unit: 'PERCENT', validUntil: '2024.12.31', status: 'active' 
+    },
+    { 
+      id: 'c2', title: 'Birthday Special', description: '5,000 KRW discount on any performance', 
+      amount: 5000, unit: 'KRW', minPurchase: 50000, validUntil: '2023.12.31', status: 'active' 
+    },
+    { 
+      id: 'c3', title: 'Early Bird', description: '20% off for reservations 2 months in advance', 
+      amount: 20, unit: 'PERCENT', validUntil: '2023.09.30', status: 'expired' 
+    }
+  ]);
 
   // --- Persistence Effects ---
 
@@ -145,24 +176,24 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   };
 
   const cancelTicket = (ticketId: string) => {
+    const ticket = tickets.find(t => t.id === ticketId);
     setTickets((prev) => 
-      prev.map(ticket => ticket.id === ticketId ? { ...ticket, status: 'canceled' } : ticket)
+      prev.map(t => t.id === ticketId ? { ...t, status: 'canceled' } : t)
     );
     
-    // Simulate Refund Notification
+    // Simulate Refund calculation
+    const refundAmount = ticket?.balance || (ticket?.category === 'voucher' ? 50000 : 120000); 
+
     const newNotif: NotificationItem = {
         id: `n-${Date.now()}`,
         title: 'Gift Canceled',
-        message: 'Your gift has been canceled and the amount refunded to your balance.',
+        message: `Gift to ${ticket?.recipientName || 'friend'} canceled. Refund: ${new Intl.NumberFormat('ko-KR').format(refundAmount)} KRW.`,
         time: 'Just now',
         read: false,
         type: 'info'
     };
     setNotifications(prev => [newNotif, ...prev]);
-    
-    // Simulate Refund Balance (Simplified: Adding 50,000 KRW merely as an example, 
-    // real logic would need original price tracking)
-    setUserBalance(prev => prev + 50000);
+    setUserBalance(prev => prev + refundAmount);
   };
 
   const addNotification = (notification: NotificationItem) => {
@@ -252,7 +283,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       inquiries,
       addInquiry,
       theme,
-      toggleTheme
+      toggleTheme,
+      myReviews,
+      coupons
     }}>
       {children}
     </AppContext.Provider>

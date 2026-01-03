@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { AppScreen, EventData, NavigationHandler, ReviewData } from '../types';
 import { useAppContext } from '../context/AppContext';
+import { IMAGES } from '../constants';
 
 interface EventDetailsScreenProps {
   event: EventData;
@@ -10,9 +11,42 @@ interface EventDetailsScreenProps {
 }
 
 const MOCK_REVIEWS: ReviewData[] = [
-  { id: 'r1', userId: 'user1', userName: 'Sarah K.', rating: 5, date: '2023.10.22', content: 'Absolutely breathtaking! The visuals and performance were top-notch.', likes: 12 },
-  { id: 'r2', userId: 'user2', userName: 'Mike R.', rating: 4, date: '2023.10.20', content: 'Great show, but the seating was a bit tight. The music made up for it though.', likes: 4 },
-  { id: 'r3', userId: 'user3', userName: 'Emily W.', rating: 5, date: '2023.10.18', content: 'A masterpiece. I would watch it again in a heartbeat.', likes: 8 },
+  { 
+    id: 'r1', 
+    eventId: '1', 
+    eventTitle: 'The Phantom of the Opera', 
+    eventImage: IMAGES.phantom, 
+    userId: 'user1', 
+    userName: 'Sarah K.', 
+    rating: 5, 
+    date: '2023.10.22', 
+    content: 'Absolutely breathtaking! The visuals and performance were top-notch.', 
+    likes: 12 
+  },
+  { 
+    id: 'r2', 
+    eventId: '1', 
+    eventTitle: 'The Phantom of the Opera', 
+    eventImage: IMAGES.phantom, 
+    userId: 'user2', 
+    userName: 'Mike R.', 
+    rating: 4, 
+    date: '2023.10.20', 
+    content: 'Great show, but the seating was a bit tight. The music made up for it though.', 
+    likes: 4 
+  },
+  { 
+    id: 'r3', 
+    eventId: '1', 
+    eventTitle: 'The Phantom of the Opera', 
+    eventImage: IMAGES.phantom, 
+    userId: 'user3', 
+    userName: 'Emily W.', 
+    rating: 5, 
+    date: '2023.10.18', 
+    content: 'A masterpiece. I would watch it again in a heartbeat.', 
+    likes: 8 
+  },
 ];
 
 export const EventDetailsScreen: React.FC<EventDetailsScreenProps> = ({ event, onNavigate, onBack }) => {
@@ -243,3 +277,4 @@ export const EventDetailsScreen: React.FC<EventDetailsScreenProps> = ({ event, o
     </div>
   );
 };
+    

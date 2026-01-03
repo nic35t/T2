@@ -38,6 +38,9 @@ export interface TicketData {
 
 export interface ReviewData {
   id: string;
+  eventId: string; // Linked event
+  eventTitle: string;
+  eventImage: string;
   userId: string;
   userName: string;
   rating: number; // 1~5
@@ -45,6 +48,17 @@ export interface ReviewData {
   content: string;
   images?: string[];
   likes: number;
+}
+
+export interface CouponData {
+  id: string;
+  title: string;
+  description: string;
+  amount: number;
+  unit: 'KRW' | 'PERCENT';
+  minPurchase?: number;
+  validUntil: string;
+  status: 'active' | 'used' | 'expired';
 }
 
 export interface NoticeData {
@@ -80,6 +94,9 @@ export enum AppScreen {
   CUSTOMER_CENTER = 'CUSTOMER_CENTER', // New
   VOUCHER_DETAILS = 'VOUCHER_DETAILS',
   VOUCHER_PURCHASE = 'VOUCHER_PURCHASE',
+  MY_REVIEWS = 'MY_REVIEWS', // New
+  COUPONS = 'COUPONS', // New
+  PROFILE_DETAILS = 'PROFILE_DETAILS', // New
 }
 
 export type NavigationHandler = (screen: AppScreen, data?: any) => void;

@@ -17,12 +17,13 @@ export const TicketsScreen: React.FC<TicketsScreenProps> = ({ onNavigate }) => {
   // Cancel Logic State
   const [ticketToCancel, setTicketToCancel] = useState<TicketData | null>(null);
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false); // Success Popup
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isCanceling, setIsCanceling] = useState(false);
   
   const { tickets, unreadCount, cancelTicket } = useAppContext();
 
-  // Toast Timer
+  // Toast Timer (used for Resend SMS)
   useEffect(() => {
     if (toastMessage) {
       const timer = setTimeout(() => setToastMessage(null), 3000);
@@ -76,9 +77,13 @@ export const TicketsScreen: React.FC<TicketsScreenProps> = ({ onNavigate }) => {
         cancelTicket(ticketToCancel.id);
         setIsCanceling(false);
         setShowCancelModal(false);
-        setTicketToCancel(null);
-        setToastMessage('Gift has been canceled successfully.');
-    }, 1000);
+        setShowSuccessModal(true); // Open Success Popup
+    }, 1500);
+  };
+
+  const handleCloseSuccess = () => {
+      setShowSuccessModal(false);
+      setTicketToCancel(null);
   };
 
   const formatKRW = (amount: number) => {
@@ -105,7 +110,7 @@ export const TicketsScreen: React.FC<TicketsScreenProps> = ({ onNavigate }) => {
   return (
     <div className="bg-gray-100 dark:bg-background-dark min-h-screen pb-28 text-gray-900 dark:text-white font-sans relative overflow-hidden transition-colors duration-300">
       
-      {/* Toast */}
+      {/* Toast (For SMS Resend only) */}
       {toastMessage && (
         <div className="fixed top-20 left-1/2 -translate-x-1/2 bg-white text-black px-6 py-3 rounded-full font-bold shadow-2xl z-[100] animate-fade-in-up border border-gray-200">
            {toastMessage}
@@ -496,6 +501,36 @@ export const TicketsScreen: React.FC<TicketsScreenProps> = ({ onNavigate }) => {
                       {isCanceling ? <span className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span> : 'Yes, Cancel'}
                    </button>
                </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Success Modal (Popup) */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center px-4 animate-fade-in">
+          <div 
+             className="absolute inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm"
+             onClick={handleCloseSuccess}
+          ></div>
+
+          <div className="relative w-full max-w-sm bg-white dark:bg-surface-card rounded-3xl border border-gray-200 dark:border-white/10 overflow-hidden shadow-2xl animate-fade-in-up">
+            <div className="p-8 flex flex-col items-center">
+               <div className="size-16 rounded-full bg-green-100 dark:bg-green-500/20 flex items-center justify-center mb-4 text-green-600 dark:text-green-500">
+                  <span className="material-symbols-outlined text-3xl">check_circle</span>
+               </div>
+               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 font-serif">Cancellation Complete</h3>
+               <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 text-center leading-relaxed">
+                  The gift has been successfully canceled.<br/>
+                  Refund has been credited to your wallet.
+               </p>
+               
+               <button 
+                  onClick={handleCloseSuccess}
+                  className="w-full h-12 bg-gray-900 dark:bg-white text-white dark:text-black font-bold rounded-xl shadow-lg hover:bg-black dark:hover:bg-white/90 transition-colors text-sm uppercase tracking-wide"
+               >
+                  Close
+               </button>
             </div>
           </div>
         </div>

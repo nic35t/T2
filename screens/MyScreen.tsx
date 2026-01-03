@@ -9,14 +9,14 @@ interface MyScreenProps {
 }
 
 export const MyScreen: React.FC<MyScreenProps> = ({ onNavigate }) => {
-  const { logout, userBalance, userPoints, theme, toggleTheme } = useAppContext();
+  const { logout, userBalance, userPoints, theme, toggleTheme, coupons, myReviews } = useAppContext();
 
   const handleLogout = () => {
     logout();
     onNavigate?.(AppScreen.ONBOARDING);
   };
 
-  const navigateToCustomerCenter = (tab: 'NOTICE' | 'FAQ' | 'INQUIRY') => {
+  const navigateToCustomerCenter = (tab: 'NOTICE' | 'GUIDE' | 'FAQ' | 'INQUIRY' | 'TERMS') => {
     onNavigate?.(AppScreen.CUSTOMER_CENTER, { initialTab: tab });
   };
 
@@ -41,14 +41,26 @@ export const MyScreen: React.FC<MyScreenProps> = ({ onNavigate }) => {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/20 rounded-full blur-[80px] pointer-events-none opacity-50 dark:opacity-100"></div>
           
           <div className="relative z-10 flex flex-col items-center gap-4">
-            <div className="relative group cursor-pointer">
+            <div 
+              className="relative group cursor-pointer transition-transform duration-300 hover:scale-105 active:scale-95"
+              onClick={() => onNavigate?.(AppScreen.PROFILE_DETAILS)}
+            >
               <div className="w-24 h-24 rounded-full overflow-hidden border-[3px] border-white dark:border-surface-card shadow-2xl relative ring-4 ring-gray-100 dark:ring-transparent">
                 <img src={IMAGES.profile} alt="Profile" className="w-full h-full object-cover" />
               </div>
+              <div className="absolute bottom-0 right-0 bg-gray-900 dark:bg-white text-white dark:text-black p-1.5 rounded-full shadow-lg border-2 border-white dark:border-surface-card flex items-center justify-center">
+                 <span className="material-symbols-outlined text-[14px]">edit</span>
+              </div>
             </div>
             
-            <div className="flex flex-col items-center text-center space-y-1">
-              <h2 className="text-xl font-bold tracking-tight font-serif text-gray-900 dark:text-white">Alex Thespian</h2>
+            <div 
+              className="flex flex-col items-center text-center space-y-1 cursor-pointer"
+              onClick={() => onNavigate?.(AppScreen.PROFILE_DETAILS)}
+            >
+              <h2 className="text-xl font-bold tracking-tight font-serif text-gray-900 dark:text-white flex items-center gap-1">
+                Alex Thespian
+                <span className="material-symbols-outlined text-gray-400 text-[18px]">chevron_right</span>
+              </h2>
               <div className="mt-2 py-0.5 px-3 bg-gradient-to-r from-primary to-primary-dim rounded-full shadow-glow">
                 <p className="text-white dark:text-black text-[10px] font-bold tracking-wide uppercase">Gold Member</p>
               </div>
@@ -86,16 +98,58 @@ export const MyScreen: React.FC<MyScreenProps> = ({ onNavigate }) => {
 
         {/* Menu Sections */}
         <div className="px-4 flex flex-col gap-6">
+
+          {/* My Activity Section (New) */}
+          <div>
+            <h3 className="px-2 mb-2 text-[10px] font-bold text-gray-500 uppercase tracking-widest">My Activity</h3>
+            <div className="bg-white dark:bg-surface-card rounded-2xl overflow-hidden shadow-sm border border-gray-200 dark:border-white/5 transition-colors duration-300">
+              {[
+                { 
+                  icon: 'rate_review', 
+                  label: 'My Reviews', 
+                  count: myReviews.length,
+                  action: () => onNavigate?.(AppScreen.MY_REVIEWS) 
+                },
+                { 
+                  icon: 'local_offer', 
+                  label: 'Discount Coupons', 
+                  count: coupons.filter(c => c.status === 'active').length,
+                  action: () => onNavigate?.(AppScreen.COUPONS) 
+                }
+              ].map((item, idx, arr) => (
+                <React.Fragment key={item.label}>
+                  <button 
+                    onClick={item.action}
+                    className="w-full flex items-center gap-4 p-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors text-left group"
+                  >
+                    <div className="flex items-center justify-center rounded-lg bg-gray-100 dark:bg-[#2C2C2E] text-primary shrink-0 w-9 h-9">
+                      <span className="material-symbols-outlined text-[18px]">{item.icon}</span>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">{item.label}</p>
+                    </div>
+                    {item.count !== undefined && (
+                        <span className="text-xs font-bold text-gray-400 dark:text-gray-500 mr-2">{item.count}</span>
+                    )}
+                    <span className="material-symbols-outlined text-gray-400 dark:text-gray-600 text-[18px] group-hover:text-gray-900 dark:group-hover:text-white transition-colors">chevron_right</span>
+                  </button>
+                  {idx < arr.length - 1 && <div className="h-px bg-gray-100 dark:bg-white/5 mx-4"></div>}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
           
           {/* Customer Center Section */}
           <div>
             <h3 className="px-2 mb-2 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Customer Center</h3>
             <div className="bg-white dark:bg-surface-card rounded-2xl overflow-hidden shadow-sm border border-gray-200 dark:border-white/5 transition-colors duration-300">
               {[
-                { icon: 'campaign', label: 'Notices', action: () => navigateToCustomerCenter('NOTICE') },
+                { icon: 'campaign', label: 'Notices & Events', action: () => navigateToCustomerCenter('NOTICE') },
+                { icon: 'menu_book', label: 'User Guide', action: () => navigateToCustomerCenter('GUIDE') },
                 { icon: 'help', label: 'FAQ', action: () => navigateToCustomerCenter('FAQ') },
-                { icon: 'support_agent', label: '1:1 Inquiry', action: () => navigateToCustomerCenter('INQUIRY') }
-              ].map((item, idx) => (
+                { icon: 'support_agent', label: '1:1 Inquiry', action: () => navigateToCustomerCenter('INQUIRY') },
+                { icon: 'policy', label: 'Terms & Policies', action: () => navigateToCustomerCenter('TERMS') }
+              ].map((item, idx, arr) => (
                 <React.Fragment key={item.label}>
                   <button 
                     onClick={item.action}
@@ -109,7 +163,7 @@ export const MyScreen: React.FC<MyScreenProps> = ({ onNavigate }) => {
                     </div>
                     <span className="material-symbols-outlined text-gray-400 dark:text-gray-600 text-[18px] group-hover:text-gray-900 dark:group-hover:text-white transition-colors">chevron_right</span>
                   </button>
-                  {idx < 2 && <div className="h-px bg-gray-100 dark:bg-white/5 mx-4"></div>}
+                  {idx < arr.length - 1 && <div className="h-px bg-gray-100 dark:bg-white/5 mx-4"></div>}
                 </React.Fragment>
               ))}
             </div>

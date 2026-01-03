@@ -17,6 +17,9 @@ import { CastListScreen } from './screens/CastListScreen';
 import { VoucherDetailsScreen } from './screens/VoucherDetailsScreen';
 import { VoucherPurchaseScreen } from './screens/VoucherPurchaseScreen';
 import { NotificationsScreen } from './screens/NotificationsScreen';
+import { MyReviewsScreen } from './screens/MyReviewsScreen';
+import { CouponsScreen } from './screens/CouponsScreen';
+import { ProfileDetailsScreen } from './screens/ProfileDetailsScreen';
 import { BottomNav } from './components/BottomNav';
 import { AppProvider } from './context/AppContext';
 
@@ -74,6 +77,12 @@ const AppContent: React.FC = () => {
         return <MyScreen onNavigate={handleNavigate} />;
       case AppScreen.CUSTOMER_CENTER: 
         return <CustomerCenterScreen initialTab={selectedData?.initialTab} onBack={handleBack} />;
+      case AppScreen.MY_REVIEWS:
+        return <MyReviewsScreen onBack={handleBack} />;
+      case AppScreen.COUPONS:
+        return <CouponsScreen onBack={handleBack} />;
+      case AppScreen.PROFILE_DETAILS:
+        return <ProfileDetailsScreen onBack={handleBack} />;
       case AppScreen.EVENT_DETAILS:
         if (selectedData?.category === 'voucher') {
           return <VoucherDetailsScreen 
@@ -137,7 +146,10 @@ const AppContent: React.FC = () => {
     AppScreen.NOTIFICATIONS,
     AppScreen.CUSTOMER_CENTER,
     AppScreen.VOUCHER_DETAILS,
-    AppScreen.VOUCHER_PURCHASE
+    AppScreen.VOUCHER_PURCHASE,
+    AppScreen.MY_REVIEWS,
+    AppScreen.COUPONS,
+    AppScreen.PROFILE_DETAILS
   ].includes(currentScreen);
 
   return (
