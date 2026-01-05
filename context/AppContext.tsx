@@ -40,7 +40,9 @@ interface AppContextType {
   userBalance: number; 
   userPoints: number; 
   chargeBalance: (amount: number) => void;
+  useBalance: (amount: number) => void; // Added
   addPoints: (amount: number) => void;
+  usePoints: (amount: number) => void;
   // Deep Logic: Seat Booking & Inquiries
   bookedSeats: Record<string, string[]>; 
   bookSeat: (eventId: string, seatId: string) => boolean;
@@ -204,8 +206,16 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setUserBalance(prev => prev + amount);
   };
 
+  const useBalance = (amount: number) => {
+    setUserBalance(prev => Math.max(0, prev - amount));
+  };
+
   const addPoints = (amount: number) => {
     setUserPoints(prev => prev + amount);
+  };
+
+  const usePoints = (amount: number) => {
+    setUserPoints(prev => Math.max(0, prev - amount));
   };
 
   const login = () => setIsLoggedIn(true);
@@ -277,7 +287,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       userBalance,
       userPoints,
       chargeBalance,
+      useBalance,
       addPoints,
+      usePoints,
       bookedSeats,
       bookSeat,
       inquiries,

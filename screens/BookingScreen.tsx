@@ -11,7 +11,7 @@ interface BookingScreenProps {
 
 export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate, onBack }) => {
   const [selectedSeat, setSelectedSeat] = useState<string | null>(null);
-  const { addTicket, addPoints, bookedSeats, bookSeat, addNotification } = useAppContext();
+  const { addTicket, addPoints, bookedSeats, bookSeat, addNotification, userPoints, usePoints, userBalance, useBalance } = useAppContext();
   const [isProcessing, setIsProcessing] = useState(false);
   const [takenSeats, setTakenSeats] = useState<Set<string>>(new Set());
 
@@ -22,6 +22,10 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
   const [recipientName, setRecipientName] = useState(''); // Store recipient name
   const [recipientPhone, setRecipientPhone] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Asset Logic
+  const [pointsToUse, setPointsToUse] = useState<number>(0);
+  const [cashToUse, setCashToUse] = useState<number>(0);
 
   // Load taken seats from context for this specific event
   useEffect(() => {
@@ -82,6 +86,10 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
         alert("This seat has just been booked by another user.");
         return;
     }
+    
+    // Reset assets
+    setPointsToUse(0);
+    setCashToUse(0);
 
     if (isGift) {
       setShowGiftModal(true);
@@ -97,6 +105,32 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
      setShowConfirm(true);
   };
 
+  const handlePointChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+     const val = parseInt(e.target.value) || 0;
+     const remainingAfterCash = Math.max(0, getFinalPrice() - cashToUse);
+     const maxPoints = Math.min(userPoints, remainingAfterCash);
+     setPointsToUse(Math.min(Math.max(0, val), maxPoints));
+  };
+
+  const handleCashChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+     const val = parseInt(e.target.value) || 0;
+     const remainingAfterPoints = Math.max(0, getFinalPrice() - pointsToUse);
+     const maxCash = Math.min(userBalance, remainingAfterPoints);
+     setCashToUse(Math.min(Math.max(0, val), maxCash));
+  };
+
+  const handleUseAllPoints = () => {
+     const remainingAfterCash = Math.max(0, getFinalPrice() - cashToUse);
+     const maxPoints = Math.min(userPoints, remainingAfterCash);
+     setPointsToUse(maxPoints);
+  };
+
+  const handleUseAllCash = () => {
+     const remainingAfterPoints = Math.max(0, getFinalPrice() - pointsToUse);
+     const maxCash = Math.min(userBalance, remainingAfterPoints);
+     setCashToUse(maxCash);
+  };
+
   const handleConfirmBooking = () => {
     if (!selectedSeat) return;
 
@@ -104,8 +138,9 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
 
     const finalPrice = getFinalPrice();
     const originalPrice = getOriginalPrice();
-    const savedAmount = originalPrice - finalPrice;
-    const pointsEarned = finalPrice * 0.1; // 10% Accumulation
+    const actualPaid = finalPrice - pointsToUse - cashToUse;
+    const savedAmount = (originalPrice - finalPrice) + pointsToUse; // Total saved (discount + points)
+    const pointsEarned = actualPaid * 0.1; // 10% Accumulation on actual paid amount
 
     const row = selectedSeat.charAt(0);
     const grade = getSeatInfo(row).grade;
@@ -121,7 +156,11 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
           return;
       }
 
-      // 2. Create the ticket object (for both self and gift)
+      // 2. Use points/cash if any
+      if (pointsToUse > 0) usePoints(pointsToUse);
+      if (cashToUse > 0) useBalance(cashToUse);
+
+      // 3. Create the ticket object (for both self and gift)
       const newTicket: TicketData = {
         id: `t-${Date.now()}`,
         eventId: event.id,
@@ -139,10 +178,10 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
         recipientName: isGift ? recipientName : undefined
       };
 
-      // 3. Save to wallet (History)
+      // 4. Save to wallet (History)
       addTicket(newTicket);
 
-      // 4. Notifications
+      // 5. Notifications
       if (isGift) {
         addNotification({
             id: `gift-${Date.now()}`,
@@ -161,7 +200,7 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
       // Navigate to Success Screen
       onNavigate(AppScreen.BOOKING_SUCCESS, {
         title: isGift ? 'Ticket Gift Sent' : event.title,
-        totalPaid: finalPrice,
+        totalPaid: actualPaid + cashToUse, // Cash used is technically part of the paid amount, but displayed as separate deduction? Usually users see Total Paid as Credit Card charge. Let's assume actualPaid is external.
         totalSaved: savedAmount,
         pointsEarned: pointsEarned,
         isVoucher: false,
@@ -427,7 +466,7 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
                         onChange={(e) => setRecipientName(e.target.value)}
                         className="w-full h-12 bg-gray-100 dark:bg-black/30 border border-transparent dark:border-white/10 rounded-xl px-4 text-gray-900 dark:text-white focus:border-primary focus:outline-none focus:bg-white dark:focus:bg-black/50 transition-colors" 
                         placeholder="Friend's Name" 
-                     />
+                    />
                   </div>
                   <div>
                      <label className="text-xs text-gray-500 uppercase font-bold mb-1 block">Mobile Number</label>
@@ -462,7 +501,7 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
                   <span className="material-symbols-outlined text-3xl">fingerprint</span>
                </div>
                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Authenticate Payment</h3>
-               <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 text-center">Confirm {isGift ? 'gift' : 'booking'} of {formatKRW(finalPrice)}.</p>
+               <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 text-center">Confirm {isGift ? 'gift' : 'booking'} of {formatKRW(finalPrice - pointsToUse - cashToUse)}.</p>
                
                <div className="w-full bg-gray-100 dark:bg-black/30 rounded-xl p-4 mb-6 border border-gray-200 dark:border-white/5">
                   <div className="flex justify-between text-sm mb-1">
@@ -475,9 +514,60 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ event, onNavigate,
                         <span className="text-gray-900 dark:text-white font-bold">{recipientName}</span>
                      </div>
                   )}
+
+                  {/* Asset Input Section */}
+                  <div className="my-3 py-3 border-y border-gray-200 dark:border-white/5 space-y-3">
+                     
+                     {/* L-Ticket Cash */}
+                     <div>
+                        <div className="flex justify-between text-sm mb-1">
+                           <span className="text-gray-500 font-bold">L-Ticket Cash</span>
+                           <span className="text-gray-500 text-xs">Held: {formatKRW(userBalance)}</span>
+                        </div>
+                        <div className="flex gap-2">
+                           <input 
+                              type="number" 
+                              value={cashToUse > 0 ? cashToUse : ''}
+                              onChange={handleCashChange}
+                              placeholder="0"
+                              className="flex-1 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded px-3 py-1.5 text-right text-sm font-mono focus:outline-none focus:border-primary text-gray-900 dark:text-white"
+                           />
+                           <button 
+                              onClick={handleUseAllCash}
+                              className="px-3 py-1 bg-gray-200 dark:bg-white/10 text-xs font-bold text-gray-600 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-white/20 transition-colors"
+                           >
+                              MAX
+                           </button>
+                        </div>
+                     </div>
+
+                     {/* L-Point */}
+                     <div>
+                        <div className="flex justify-between text-sm mb-1">
+                           <span className="text-gray-500 font-bold">L-Point</span>
+                           <span className="text-gray-500 text-xs">Held: {userPoints.toLocaleString()} P</span>
+                        </div>
+                        <div className="flex gap-2">
+                           <input 
+                              type="number" 
+                              value={pointsToUse > 0 ? pointsToUse : ''}
+                              onChange={handlePointChange}
+                              placeholder="0"
+                              className="flex-1 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded px-3 py-1.5 text-right text-sm font-mono focus:outline-none focus:border-primary text-gray-900 dark:text-white"
+                           />
+                           <button 
+                              onClick={handleUseAllPoints}
+                              className="px-3 py-1 bg-gray-200 dark:bg-white/10 text-xs font-bold text-gray-600 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-white/20 transition-colors"
+                           >
+                              MAX
+                           </button>
+                        </div>
+                     </div>
+                  </div>
+
                   <div className="flex justify-between text-sm">
-                     <span className="text-gray-500">Total</span>
-                     <span className="text-lotte-red font-bold">{formatKRW(finalPrice)}</span>
+                     <span className="text-gray-500">Total Payment</span>
+                     <span className="text-lotte-red font-bold text-lg">{formatKRW(finalPrice - pointsToUse - cashToUse)}</span>
                   </div>
                </div>
 
