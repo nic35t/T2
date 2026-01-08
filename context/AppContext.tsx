@@ -40,7 +40,7 @@ interface AppContextType {
   userBalance: number; 
   userPoints: number; 
   chargeBalance: (amount: number) => void;
-  useBalance: (amount: number) => void; // Added
+  useBalance: (amount: number) => void; 
   addPoints: (amount: number) => void;
   usePoints: (amount: number) => void;
   // Deep Logic: Seat Booking & Inquiries
@@ -109,7 +109,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     const saved = localStorage.getItem('lticket_theme');
-    return saved === 'dark' ? 'dark' : 'light';
+    // Default to 'dark' if not present
+    return saved ? (saved === 'dark' ? 'dark' : 'light') : 'dark';
   });
 
   // Mock Data for Reviews and Coupons (Not persisted for prototype simplicity)
