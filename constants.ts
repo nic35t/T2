@@ -12,7 +12,7 @@ export const IMAGES = {
   // Performance Key Art (Updated to AIDA Public Links & Wikimedia/Unsplash)
   phantom: "https://lh3.googleusercontent.com/aida-public/AB6AXuA-ybED2d55gcGZ_zibev__u3vwYT9CkCntmvCgQjcyCOhTlGFNrwCVcwxRfpxJhGdvt6CKCBxoLcUw_DJLo0FB04tUY3aCViVqBGADDAM5LGAfVV34Ogyv75Q5f3Ht2HZySlk7hQZBTpaEaWgzXg8JlY7BWxgC6jFLZfIA6vTH0ys1qMIAdxv-2s4bHWwN-t8OFXU6-gMyRml1VLcs8XO2ECqZ9UEx2-y88GjFltEq1xfjYR2Zxd70NVtJ_NQEgZZcrPe3c9OMmYA", // Phantom (AIDA)
   chicago: "https://lh3.googleusercontent.com/aida-public/AB6AXuBsuobXasTcDaBg3wncdKA3JMuTEMq4yLOs--X70ieaznJ2box4Clny9TmY4QnZM0WTi7DB4SJZV08YYZkC-xFpWjl97gv8lHAVlb5lgr8EeYLvZEzKkyH7ir3CkcuEylmqe33SPAsvx2YozY3RNhTsKa1v1SyzvQwwODf_r2ZK2758FaV79WwbQdMHT8UFFgXVKHnIdzUICnk_tjLGxoYnLiMxS739zpDqFbWdWJxiiZ-ZtesEZTgpt-0hXGdg_JIqyOwMdE6CFLc", // Midnight Jazz / Chicago (AIDA)
-  billyElliot: "https://lh3.googleusercontent.com/aida-public/AB6AXuD6286zZzVKUaEIGHEEtrd6ndcvlTBc3T-ai-2z3ZpKtmMV_u10h6c4_W3Mn5q8_-AjzTHCDGMS7UM5HzOSvVu-aHmghyriMrJwCg8xBUEE_mPf9IFlbOTBFbQpY0uli7VuoBpywIsNtMh5yN0B0Jv6WzVq1ZA1YHH_Z0b3cSqKgN6XuRZ7C-pJbNwBpIkWs2E5mEmO5ld8Jpk82ofISgQqib0V2MfRB7HjkjPJeXssemTYub0kGoQQ7OGq1xYWwzqom203a7bNr2o", // Symphony / Billy Elliot (AIDA)
+  billyElliot: "https://images.unsplash.com/photo-1508700929628-666bc8bd84ea?q=80&w=2000&auto=format&fit=crop", // Male Dancer / Passion (Updated)
   swanLake: "https://lh3.googleusercontent.com/aida-public/AB6AXuATCrkN00HybZjvW8KmPX9exnbyzR20OfX20_vI1pHKm4s8yRJegRUdebbKEmw7sU698T660580vurHiuKFlVLOlP4A5abvbGmkX0poV0H4jbTlCVnzISCLcePVQhONOFIXdnimUUudd2cdnHx8DuZBsk_4pG5Qdp7o6srnLraBfTOizRQS2FZwe2gfhEgsCu7vVpd7XpcuLkxRLykcJr3nTVZRhfWe328K-jUmtdEZsaFqCJtlyZJfUZR4rytaXMzAebdCXjhyE0k", // Swan Lake (AIDA)
   
   // Wikimedia Commons (Public Domain / Creative Commons)

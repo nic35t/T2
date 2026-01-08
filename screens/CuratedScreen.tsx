@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { EVENTS, IMAGES } from '../constants';
 import { AppScreen, NavigationHandler, EventData } from '../types';
@@ -244,7 +245,12 @@ export const CuratedScreen: React.FC<CuratedScreenProps> = ({ onNavigate }) => {
               
               if (layout === 'list') {
                 return (
-                  <article key={event.id} onClick={() => onNavigate?.(AppScreen.EVENT_DETAILS, event)} className="animate-fade-in-up w-full bg-white dark:bg-surface-card rounded-2xl border border-gray-100 dark:border-white/5 flex overflow-hidden group active:scale-[0.99] transition-all duration-300 hover:border-primary/40 cursor-pointer shadow-card-light hover:shadow-card-hover dark:shadow-sm" style={{ animationDelay: `${index * 0.05}s` }}>
+                  <article 
+                    key={event.id} 
+                    onClick={() => onNavigate?.(AppScreen.EVENT_DETAILS, event)}
+                    className="animate-fade-in-up w-full bg-white dark:bg-surface-card rounded-2xl border border-gray-100 dark:border-white/5 flex overflow-hidden group active:scale-[0.99] transition-all duration-300 hover:border-primary/40 cursor-pointer shadow-card-light hover:shadow-card-hover dark:shadow-sm" 
+                    style={{ animationDelay: `${index * 0.05}s` }}
+                  >
                     <div className="w-32 md:w-40 shrink-0 relative overflow-hidden">
                       <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style={{ backgroundImage: `url('${event.image}')` }}></div>
                       <div className="absolute inset-0 bg-black/5 dark:bg-black/20 group-hover:bg-transparent transition-colors"></div>
@@ -298,7 +304,12 @@ export const CuratedScreen: React.FC<CuratedScreenProps> = ({ onNavigate }) => {
               
               // Grid View
               return (
-                <article key={event.id} onClick={() => onNavigate?.(AppScreen.EVENT_DETAILS, event)} className="animate-fade-in-up cursor-pointer group" style={{ animationDelay: `${index * 0.1}s` }}>
+                <article 
+                    key={event.id} 
+                    onClick={() => onNavigate?.(AppScreen.EVENT_DETAILS, event)}
+                    className="animate-fade-in-up cursor-pointer group" 
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                >
                    <div className="relative w-full h-full bg-white dark:bg-surface-card rounded-[32px] overflow-hidden shadow-card-light hover:shadow-card-hover dark:shadow-xl border border-gray-100 dark:border-white/10 flex flex-col group active:scale-[0.98] transition-all duration-300 hover:border-primary/40">
                       <div className="h-[72px] px-6 flex items-center justify-between bg-white dark:bg-white/[0.02] border-b border-gray-100 dark:border-white/5 relative z-20">
                          <div className="flex flex-col justify-center gap-0.5">
