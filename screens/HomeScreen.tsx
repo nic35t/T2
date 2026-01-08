@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { IMAGES, EVENTS } from '../constants';
 import { AppScreen, NavigationHandler, EventData } from '../types';
@@ -125,7 +126,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
 
       {/* Hero Carousel */}
       <section 
-        className="relative w-full h-[75vh] overflow-hidden bg-gray-900"
+        className="relative flex flex-col size-full h-[75vh] md:h-screen overflow-hidden bg-gray-900"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -133,10 +134,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
         {EVENTS.map((event, index) => (
           <div 
             key={event.id}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === activeIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+            className={`absolute inset-0 size-full transition-opacity duration-1000 ease-in-out ${index === activeIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
           >
              <div 
-                className={`absolute inset-0 w-full h-full bg-cover bg-center transition-transform duration-[8000ms] ease-linear ${index === activeIndex ? 'scale-110' : 'scale-100'}`}
+                className={`absolute inset-0 size-full bg-cover bg-center transition-transform duration-[8000ms] ease-linear ${index === activeIndex ? 'scale-110' : 'scale-100'}`}
                 style={{ backgroundImage: `url('${event.image}')` }}
              >
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_rgba(0,0,0,0.4)_100%)]"></div>
