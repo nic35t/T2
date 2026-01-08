@@ -13,6 +13,10 @@ export interface EventData {
   status?: 'selling-fast' | 'limited-run' | 'sold-out' | 'new-arrival';
   description?: string;
   featured?: boolean;
+  // New fields for Curated Commerce
+  curatorNote?: string;
+  highlights?: { title: string; desc: string; icon: string }[];
+  notice?: string;
 }
 
 export interface TicketData {

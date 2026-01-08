@@ -171,10 +171,46 @@ export const EventDetailsScreen: React.FC<EventDetailsScreenProps> = ({ event, o
                   </div>
                 </div>
 
+                {/* Curator's Note (New) */}
+                {event.curatorNote && (
+                  <div className="bg-primary/5 dark:bg-primary/10 p-6 rounded-2xl border border-primary/10 dark:border-primary/20 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                       <span className="material-symbols-outlined text-6xl text-primary">format_quote</span>
+                    </div>
+                    <h3 className="text-xs font-bold text-primary uppercase tracking-widest mb-3 flex items-center gap-2">
+                       <span className="material-symbols-outlined text-base">edit_note</span>
+                       Curator's Note
+                    </h3>
+                    <p className="text-gray-700 dark:text-gray-300 italic leading-relaxed text-sm md:text-base font-serif">
+                       "{event.curatorNote}"
+                    </p>
+                    <div className="mt-4 flex items-center gap-2">
+                       <div className="w-6 h-6 rounded-full bg-gray-300 dark:bg-gray-700 bg-cover bg-center" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop')` }}></div>
+                       <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Sarah Jenkins, Senior Curator</span>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Key Highlights (New) */}
+                {event.highlights && (
+                  <div className="space-y-4">
+                     <h3 className="text-xl font-serif font-bold text-gray-900 dark:text-white">Key Highlights</h3>
+                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        {event.highlights.map((highlight, idx) => (
+                           <div key={idx} className="bg-white dark:bg-surface-card p-4 rounded-xl border border-gray-200 dark:border-white/5 shadow-sm">
+                              <span className="material-symbols-outlined text-primary mb-2 text-2xl">{highlight.icon}</span>
+                              <h4 className="font-bold text-sm text-gray-900 dark:text-white mb-1">{highlight.title}</h4>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">{highlight.desc}</p>
+                           </div>
+                        ))}
+                     </div>
+                  </div>
+                )}
+
                 {/* Synopsis */}
                 <div className="space-y-4 lg:space-y-6">
-                  <h3 className="text-xl lg:text-2xl font-serif font-bold text-gray-900 dark:text-white">Synopsis</h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-base lg:text-lg leading-relaxed font-light lg:font-normal">
+                  <h3 className="text-xl font-serif font-bold text-gray-900 dark:text-white">Story</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm lg:text-base leading-relaxed font-light lg:font-normal whitespace-pre-line">
                     {event.description || "A romance and tragedy that blurs the boundaries of stage performance, a feast of breathtaking visuals. Meet the masterpiece that will offer an unforgettable evening."}
                   </p>
                 </div>
@@ -182,7 +218,7 @@ export const EventDetailsScreen: React.FC<EventDetailsScreenProps> = ({ event, o
                 {/* Cast */}
                 <div className="space-y-6 lg:space-y-8">
                   <div className="flex justify-between items-center">
-                    <h3 className="text-xl lg:text-2xl font-serif font-bold text-gray-900 dark:text-white">Cast</h3>
+                    <h3 className="text-xl font-serif font-bold text-gray-900 dark:text-white">Cast</h3>
                     <button 
                       onClick={() => onNavigate(AppScreen.CAST_LIST, { event })}
                       className="text-xs lg:text-sm font-bold text-primary uppercase tracking-widest hover:opacity-80 transition-opacity"
@@ -201,6 +237,19 @@ export const EventDetailsScreen: React.FC<EventDetailsScreenProps> = ({ event, o
                     ))}
                   </div>
                 </div>
+
+                {/* Important Notice */}
+                {event.notice && (
+                   <div className="bg-gray-100 dark:bg-white/5 p-5 rounded-xl border border-gray-200 dark:border-white/5">
+                      <div className="flex items-center gap-2 mb-2 text-gray-900 dark:text-white">
+                         <span className="material-symbols-outlined text-lg">info</span>
+                         <span className="text-xs font-bold uppercase tracking-wider">Important Notice</span>
+                      </div>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+                         {event.notice}
+                      </p>
+                   </div>
+                )}
               </div>
             ) : (
               <div className="animate-fade-in space-y-6">
@@ -277,4 +326,3 @@ export const EventDetailsScreen: React.FC<EventDetailsScreenProps> = ({ event, o
     </div>
   );
 };
-    

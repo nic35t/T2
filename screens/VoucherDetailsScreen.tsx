@@ -121,6 +121,23 @@ export const VoucherDetailsScreen: React.FC<VoucherDetailsScreenProps> = ({ even
             </div>
           </div>
 
+          {/* Curator's Recommendation (New) */}
+          {event.curatorNote && (
+            <div className="bg-white dark:bg-surface-card p-6 rounded-2xl border border-gray-200 dark:border-white/5 relative">
+               <div className="flex items-start gap-4">
+                  <div className="text-primary mt-1">
+                     <span className="material-symbols-outlined text-3xl">recommend</span>
+                  </div>
+                  <div>
+                     <h3 className="font-bold text-gray-900 dark:text-white mb-2">Why This Gift?</h3>
+                     <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed italic">
+                        "{event.curatorNote}"
+                     </p>
+                  </div>
+               </div>
+            </div>
+          )}
+
           {/* Description */}
           <div className="space-y-4">
             <h3 className="text-xl font-serif font-bold text-gray-900 dark:text-white">Premium Gift</h3>
@@ -129,6 +146,34 @@ export const VoucherDetailsScreen: React.FC<VoucherDetailsScreenProps> = ({ even
               <br/><br/>
               Delivered instantly via L.TICKET mobile wallet. The recipient can use it immediately without exchanging for a physical card. Balance can be managed directly within the app.
             </p>
+          </div>
+          
+          {/* How to Use (New) */}
+          <div className="space-y-4">
+             <h3 className="text-xl font-serif font-bold text-gray-900 dark:text-white">How to Use</h3>
+             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-gray-100 dark:bg-white/5 p-4 rounded-xl text-center">
+                   <div className="size-10 rounded-full bg-white dark:bg-white/10 flex items-center justify-center mx-auto mb-3 text-primary shadow-sm">
+                      <span className="material-symbols-outlined">send_to_mobile</span>
+                   </div>
+                   <p className="font-bold text-sm mb-1 text-gray-900 dark:text-white">1. Receive</p>
+                   <p className="text-[10px] text-gray-500 dark:text-gray-400">Receive via SMS or App</p>
+                </div>
+                <div className="bg-gray-100 dark:bg-white/5 p-4 rounded-xl text-center">
+                   <div className="size-10 rounded-full bg-white dark:bg-white/10 flex items-center justify-center mx-auto mb-3 text-primary shadow-sm">
+                      <span className="material-symbols-outlined">qr_code_scanner</span>
+                   </div>
+                   <p className="font-bold text-sm mb-1 text-gray-900 dark:text-white">2. Present</p>
+                   <p className="text-[10px] text-gray-500 dark:text-gray-400">Show Barcode at Store</p>
+                </div>
+                <div className="bg-gray-100 dark:bg-white/5 p-4 rounded-xl text-center">
+                   <div className="size-10 rounded-full bg-white dark:bg-white/10 flex items-center justify-center mx-auto mb-3 text-primary shadow-sm">
+                      <span className="material-symbols-outlined">check_circle</span>
+                   </div>
+                   <p className="font-bold text-sm mb-1 text-gray-900 dark:text-white">3. Complete</p>
+                   <p className="text-[10px] text-gray-500 dark:text-gray-400">Payment Verified</p>
+                </div>
+             </div>
           </div>
 
           {/* Usage Info - Enhanced Grid */}

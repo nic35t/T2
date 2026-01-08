@@ -36,7 +36,14 @@ export const EVENTS: EventData[] = [
     originalPrice: 150000,
     image: IMAGES.phantom,
     tags: ['Musical', 'Bestseller'],
-    description: 'Experience the legendary musical in its most spectacular production ever. A haunting love story that has captivated millions around the world.'
+    description: 'Experience the legendary musical in its most spectacular production ever. A haunting love story that has captivated millions around the world.',
+    curatorNote: "The Phantom of the Opera is not just a musical; it's a cultural phenomenon. This production features the newly designed chandelier and an intensified orchestral arrangement that elevates Webber's masterpiece to new heights. The emotional depth of the 'Music of the Night' sequence is simply unparalleled.",
+    highlights: [
+      { title: 'Global Phenomenon', desc: 'Seen by over 140 million people worldwide', icon: 'public' },
+      { title: 'Spectacular Set', desc: 'Featuring the iconic 1-ton falling chandelier', icon: 'theater_comedy' },
+      { title: 'Award Winning', desc: 'Winner of 7 Tony Awards including Best Musical', icon: 'emoji_events' }
+    ],
+    notice: "Latecomers will not be seated until a suitable break in the performance. Please arrive 30 minutes prior to curtain time."
   },
   {
     id: '2',
@@ -48,7 +55,13 @@ export const EVENTS: EventData[] = [
     price: 90000,
     image: IMAGES.chicago,
     tags: ['Musical', 'Jazz'],
-    description: 'A universal tale of fame, fortune, and all that jazz. One of the most phenomenal musicals of our time.'
+    description: 'A universal tale of fame, fortune, and all that jazz. One of the most phenomenal musicals of our time.',
+    curatorNote: "Sultry, sophisticated, and sharper than ever. 'Chicago' delivers the quintessential Broadway experience with its Fosse-style choreography and biting satire on celebrity culture. It's a masterclass in style and substance.",
+    highlights: [
+      { title: 'Fosse Style', desc: 'Legendary choreography by Bob Fosse', icon: 'accessibility_new' },
+      { title: 'Jazz Age', desc: 'Immersive 1920s jazz club atmosphere', icon: 'nightlife' },
+      { title: 'Longest Running', desc: 'The longest-running American musical on Broadway', icon: 'history' }
+    ]
   },
   {
     id: '3',
@@ -60,7 +73,13 @@ export const EVENTS: EventData[] = [
     image: IMAGES.lotteCard,
     tags: ['Voucher', 'Premium'],
     status: 'new-arrival',
-    description: 'The ultimate gift of luxury. Use this premium digital certificate at all Lotte Department Stores, Lotte Marts, and affiliated luxury boutiques nationwide.'
+    description: 'The ultimate gift of luxury. Use this premium digital certificate at all Lotte Department Stores, Lotte Marts, and affiliated luxury boutiques nationwide.',
+    curatorNote: "The perfect gift when you want to offer choice without compromising on elegance. Accepted at over 80 locations nationwide, this digital voucher represents the pinnacle of convenient luxury gifting.",
+    highlights: [
+      { title: 'Nationwide Use', desc: 'Valid at all Lotte Department Stores & Affiliates', icon: 'store' },
+      { title: 'Instant Delivery', desc: 'Send via mobile immediately after purchase', icon: 'send_to_mobile' },
+      { title: 'Flexible Balance', desc: 'Use partially and keep the remaining balance', icon: 'account_balance_wallet' }
+    ]
   },
   {
     id: '5',
@@ -72,7 +91,13 @@ export const EVENTS: EventData[] = [
     price: 130000,
     image: IMAGES.rebecca,
     tags: ['Musical', 'Thriller'],
-    description: 'A suspenseful masterpiece based on the classic novel. Romance and dark secrets intertwine in the shadowy halls of Manderley.'
+    description: 'A suspenseful masterpiece based on the classic novel. Romance and dark secrets intertwine in the shadowy halls of Manderley.',
+    curatorNote: "A Gothic romance thriller that keeps you on the edge of your seat. The set design of Manderley burning is a theatrical marvel, and the character of Mrs. Danvers is chillingly unforgettable.",
+    highlights: [
+      { title: 'Gothic Thriller', desc: 'Based on Daphne du Maurier’s classic novel', icon: 'auto_stories' },
+      { title: 'Visual Spectacle', desc: 'Stunning stage effects including the fire scene', icon: 'local_fire_department' },
+      { title: 'Powerful Score', desc: 'Haunting melodies by Sylvester Levay', icon: 'music_note' }
+    ]
   },
   {
     id: '7',
@@ -84,7 +109,13 @@ export const EVENTS: EventData[] = [
     price: 110000,
     image: IMAGES.billyElliot,
     tags: ['Musical', 'Inspirational'],
-    description: 'An inspirational story of a young boy’s struggle against the odds to make his dream come true. A celebration of community and the power of dance.'
+    description: 'An inspirational story of a young boy’s struggle against the odds to make his dream come true. A celebration of community and the power of dance.',
+    curatorNote: "Heartwarming and electrically charged with energy. Billy Elliot reminds us of the power of art to transform lives. The choreography blends ballet and tap in a way that is both storytelling and spectacle.",
+    highlights: [
+      { title: 'Elton John Music', desc: 'Music by the legendary Elton John', icon: 'piano' },
+      { title: 'Inspirational', desc: 'Winner of 10 Tony Awards', icon: 'emoji_events' },
+      { title: 'Dynamic Dance', desc: 'Breathtaking ballet and tap sequences', icon: 'directions_run' }
+    ]
   },
   {
     id: '8',
@@ -96,7 +127,13 @@ export const EVENTS: EventData[] = [
     price: 140000,
     image: IMAGES.swanLake,
     tags: ['Ballet', 'Masterpiece'],
-    description: 'Tchaikovsky’s first ballet is a tragic fairy tale where a princess turned into a swan by an evil curse awaits her true love.'
+    description: 'Tchaikovsky’s first ballet is a tragic fairy tale where a princess turned into a swan by an evil curse awaits her true love.',
+    curatorNote: "The definition of classical ballet. From the synchronized corps de ballet to the technical mastery required for the dual role of Odette/Odile, this production captures the ethereal beauty and tragic romance perfectly.",
+    highlights: [
+      { title: 'Classical Masterpiece', desc: 'The world’s most famous ballet', icon: 'diamond' },
+      { title: 'Tchaikovsky Score', desc: 'Performed by a live full orchestra', icon: 'queue_music' },
+      { title: 'Visual Poetry', desc: 'Exquisite costumes and set design', icon: 'palette' }
+    ]
   },
 ];
 
