@@ -139,7 +139,7 @@ export const EventDetailsScreen: React.FC<EventDetailsScreenProps> = ({ event, o
                onClick={() => setActiveTab('info')}
                className={`flex-1 py-4 text-sm font-bold uppercase tracking-widest relative transition-colors ${activeTab === 'info' ? 'text-primary' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'}`}
              >
-                Info & Cast
+                Info & Benefit
                 {activeTab === 'info' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary shadow-glow"></div>}
              </button>
              <button 
@@ -171,7 +171,7 @@ export const EventDetailsScreen: React.FC<EventDetailsScreenProps> = ({ event, o
                   </div>
                 </div>
 
-                {/* Curator's Note (New) */}
+                {/* Curator's Note */}
                 {event.curatorNote && (
                   <div className="bg-primary/5 dark:bg-primary/10 p-6 rounded-2xl border border-primary/10 dark:border-primary/20 relative overflow-hidden group">
                     <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
@@ -190,8 +190,65 @@ export const EventDetailsScreen: React.FC<EventDetailsScreenProps> = ({ event, o
                     </div>
                   </div>
                 )}
+
+                {/* Ticket Pricing (New) */}
+                <div className="space-y-4">
+                  <h3 className="text-xl font-serif font-bold text-gray-900 dark:text-white">Ticket Pricing</h3>
+                  <div className="bg-white dark:bg-surface-card border border-gray-200 dark:border-white/5 rounded-xl overflow-hidden divide-y divide-gray-100 dark:divide-white/5">
+                    {['VIP', 'R', 'S'].map((grade) => {
+                        // Simulated Pricing Logic
+                        const base = event.price;
+                        const mod = grade === 'VIP' ? 30000 : grade === 'S' ? -30000 : 0;
+                        const original = (base + mod) * 1.25; // Simulated markup for 'Original'
+                        const final = base + mod;
+                        const discount = 20; // Fixed 20% benefit for demo
+
+                        return (
+                            <div key={grade} className="p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                <div className="flex flex-col">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border ${grade === 'VIP' ? 'bg-[#D4AF37]/10 text-[#D4AF37] border-[#D4AF37]/30' : 'bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-gray-400 border-transparent'}`}>{grade} Seat</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-xs text-gray-400 line-through decoration-gray-400/50">{formatKRW(original)}</span>
+                                        <span className="text-sm font-bold text-gray-900 dark:text-white font-mono">{formatKRW(final)}</span>
+                                    </div>
+                                </div>
+                                <span className="text-lotte-red font-bold text-lg font-mono">{discount}%</span>
+                            </div>
+                        )
+                    })}
+                  </div>
+                </div>
+
+                {/* Exclusive Benefits (New) */}
+                <div className="bg-gradient-to-br from-primary/5 to-transparent border border-primary/10 rounded-2xl p-6 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-4 opacity-5 dark:opacity-10">
+                        <span className="material-symbols-outlined text-6xl text-primary">stars</span>
+                    </div>
+                    <h3 className="text-sm font-bold text-primary uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <span className="material-symbols-outlined text-lg">verified</span>
+                        L.TICKET Exclusive
+                    </h3>
+                    <ul className="space-y-4">
+                        <li className="flex items-start gap-3">
+                            <span className="material-symbols-outlined text-primary text-lg shrink-0 mt-0.5">check_circle</span>
+                            <div>
+                                <p className="text-sm font-bold text-gray-900 dark:text-white">Member Exclusive 20% Discount</p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">Available for all Gold Members and above</p>
+                            </div>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <span className="material-symbols-outlined text-primary text-lg shrink-0 mt-0.5">check_circle</span>
+                            <div>
+                                <p className="text-sm font-bold text-gray-900 dark:text-white">L-Point 10% Accumulation</p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">Double points for weekend shows</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
                 
-                {/* Key Highlights (New) */}
+                {/* Key Highlights */}
                 {event.highlights && (
                   <div className="space-y-4">
                      <h3 className="text-xl font-serif font-bold text-gray-900 dark:text-white">Key Highlights</h3>
@@ -238,9 +295,23 @@ export const EventDetailsScreen: React.FC<EventDetailsScreenProps> = ({ event, o
                   </div>
                 </div>
 
+                {/* Production Banner (New) */}
+                <div className="bg-gray-100 dark:bg-white/5 rounded-xl p-4 flex items-center justify-between border border-gray-200 dark:border-white/5 cursor-pointer hover:bg-gray-200 dark:hover:bg-white/10 transition-colors">
+                   <div className="flex items-center gap-3">
+                      <div className="size-10 bg-white dark:bg-black rounded-full flex items-center justify-center shadow-sm">
+                         <span className="material-symbols-outlined text-lg text-gray-900 dark:text-white">theater_comedy</span>
+                      </div>
+                      <div>
+                         <p className="text-sm font-bold text-gray-900 dark:text-white">Production House</p>
+                         <p className="text-[10px] text-gray-500">Official Partner of L.TICKET</p>
+                      </div>
+                   </div>
+                   <span className="material-symbols-outlined text-gray-400 text-lg">chevron_right</span>
+                </div>
+
                 {/* Important Notice */}
                 {event.notice && (
-                   <div className="bg-gray-100 dark:bg-white/5 p-5 rounded-xl border border-gray-200 dark:border-white/5">
+                   <div className="bg-gray-50 dark:bg-surface-card p-5 rounded-xl border border-gray-200 dark:border-white/5">
                       <div className="flex items-center gap-2 mb-2 text-gray-900 dark:text-white">
                          <span className="material-symbols-outlined text-lg">info</span>
                          <span className="text-xs font-bold uppercase tracking-wider">Important Notice</span>
